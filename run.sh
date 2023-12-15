@@ -23,33 +23,12 @@ NODE_HOSTNAME_PREFIX=$(hostname -s)   # Short Host Name  -->  name of compute no
 NODE_HOSTNAME_DOMAIN=$(hostname -d)   # DNS Name  -->  stampede2.tacc.utexas.edu
 NODE_HOSTNAME_LONG=$(hostname -f)     # Fully Qualified Domain Name  -->  c###-###.stampede2.tacc.utexas.edu
 
-
-
-echo "Checking if miniconda3 is installed..."
-if [ ! -d "$WORK/miniconda3" ]; then
-  echo "Miniconda not found in $WORK..."
-  echo "Installing..."
-  mkdir -p $WORK/miniconda3
-  wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O $WORK/miniconda3/miniconda.sh
-  bash $WORK/miniconda3/miniconda.sh -b -u -p $WORK/miniconda3
-  rm -rf $WORK/miniconda3/miniconda.sh
-
-  echo "Ensuring conda base environment is OFF..."
-  conda config --set auto_activate_base false
-fi
-
-echo "Initializing conda..."
-$WORK/miniconda3/bin/conda init bash
-conda info 
-echo "Sourcing .bashrc..."
-source ~/.bashrc
-
 if [ ! -d "$WORK/sites-and-stories-nlp-jupyterenv" ]; then
     echo "Env not found, downloading"
-    wget https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp/archive/refs/heads/jupyterenv.zip 
+    wget https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp/archive/refs/heads/jupyterenv.zip
     unzip *.zip -d $WORK
-    CONDA_PKGS_DIRS=$(mktemp -d) conda create -n llm -f $WORK/sites-and-stories-nlp-jupyterenv/.binder/environment.yml 
-fi 
+    CONDA_PKGS_DIRS=$(mktemp -d) conda create -n llm -f $WORK/sites-and-stories-nlp-jupyterenv/.binder/environment.yml
+fi
 echo "Installing Conda env"
 python -m ipykernel install --user --name llm --display-name "Python (llm)"
 conda activate llm
@@ -57,7 +36,7 @@ pip install transformers[torch] ipyfilechooser pypdf ema-workbench huggingface-h
 echo "\
 import torch
 print(torch.cuda.is_available())
-" | python3      
+" | python3
 
 export TRANSFORMERS_CACHE="$WORK/sites-and-stories-nlp-jupyterenv"
 
@@ -131,7 +110,7 @@ c.${JUPYTER_SERVER_APP}.root_dir = "$WORK/sites-and-stories-nlp-jupyterenv"
 c.${JUPYTER_SERVER_APP}.preferred_dir = "$WORK/sites-and-stories-nlp-jupyterenv"
 c.IdentityProvider.token = "${TAP_TOKEN}"
 c.NotebookApp.notebook_dir = '$WORK/sites-and-stories-nlp-jupyterenv'
-c.MultiKernelManager.default_kernel_name = 'llm' 
+c.MultiKernelManager.default_kernel_name = 'llm'
 EOF
 
 # launch jupyter
