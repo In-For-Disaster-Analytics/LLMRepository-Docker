@@ -1,35 +1,70 @@
-FROM jupyter/datascience-notebook:ubuntu-22.04
- # FROM r2dhttps-3a-2f-2fgithub-2ecom-2fin-2dfor-2ddisaster-2danalytics-2fsites-2dand-2dstories-2dnlp8484276:latest
+FROM nvidia/cuda:12.3.0-devel-ubuntu22.04
 
+LABEL maintainer="TACC-ACI-WMA <wma_prtl@tacc.utexas.edu>"
 
-# The user must be swtiched to root in order to install and update packages with apt-get.
-# See https://github.com/jupyter/docker-stacks/blob/master/base-notebook/Dockerfile for info.
 USER root
 
-RUN apt-get update && apt-get install -y \
+EXPOSE 8888
+
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    fonts-liberation \
+    git \
+    locales \
+    pandoc \
+    python3 \
+    python3-pip \
     ssh \
     vim \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
+    locale-gen
+
+RUN pip install --upgrade --no-cache-dir \
+    pip \
+    setuptools \
+    wheel
+
+# Install jupyterlab and ML packages using host cache
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install \
+    jupyterlab \
+    tensorflow[and-cuda] \
+    torch
+
+# Add container user and group
+ARG NB_USER=jovyan
+ARG NB_UID=1000
+ARG NB_GID=100
+
+# Configure environment
+ENV SHELL=/bin/bash \
+    NB_USER="${NB_USER}" \
+    NB_UID=${NB_UID} \
+    NB_GID=${NB_GID} \
+    NB_HOME="/home/${NB_USER}" \
+    LC_ALL=en_US.UTF-8 \
+    LANG=en_US.UTF-8 \
+    LANGUAGE=en_US.UTF-8
+
+# Enable prompt color in the skeleton .bashrc before creating the default NB_USER
+RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashrc
+
+# Create NB_USER with UID=NB_UID and GID=NB_GID
+RUN useradd --no-log-init --create-home --shell /bin/bash --uid "${NB_UID}" --gid "${NB_GID}" "${NB_USER}"
 
 COPY run.sh /tapis/run.sh
 
 RUN chmod +x /tapis/run.sh
 
-# The user is switched back to the one from set in the base image.
-# USER 1000
-# arg GH_USER=In-For-Disaster-Analytics 
-# arg GH_REPO=sites-and-stories-nlp 
-# arg GH_BRANCH=jupyterenv 
+USER ${NB_UID}
 
-# RUN wget https://github.com/$GH_USER/$GH_REPO/archive/refs/heads/$GH_BRANCH.zip 
-# RUN unzip *.zip 
-# # RUN rm $GH_REPO-$GH_BRANCH.zip
-# RUN conda env create -n llm -f $GH_REPO-$GH_BRANCH/.binder/environment.yml
-# SHELL ["conda","run","-n","llm","/bin/bash","-c"]
+# Setup work directory
+RUN mkdir "${NB_HOME}/work"
 
-# RUN python -m ipykernel install --user --name llm --display-name "Python (llm)"
-
-# #New Code
+WORKDIR "${NB_HOME}"
 
 ENTRYPOINT [ "/tapis/run.sh" ]

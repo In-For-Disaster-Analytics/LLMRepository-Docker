@@ -1,6 +1,13 @@
 #!/bin/bash
 
 echo "TACC: job ${SLURM_JOB_ID} execution at: $(date)"
+echo load cuda
+module load cuda/12.0
+echo "\
+import torch
+print(torch.cuda.is_available())
+" | python3
+
 
 # This file will be located in the directory mounted by the job.
 SESSION_FILE=delete_me_to_end_session
@@ -43,11 +50,14 @@ if [ ! -d "$WORK/sites-and-stories-nlp-jupyterenv" ]; then
     unzip *.zip -d $WORK
     CONDA_PKGS_DIRS=$(mktemp -d) conda create -n llm -f $WORK/sites-and-stories-nlp-jupyterenv/.binder/environment.yml 
 fi 
-# echo "Installing Conda env"
-# python -m ipykernel install --user --name llm --display-name "Python (llm)"
-# conda activate llm
+echo "Installing Conda env"
+python -m ipykernel install --user --name llm --display-name "Python (llm)"
+conda activate llm
 pip install transformers[torch] ipyfilechooser pypdf ema-workbench huggingface-hub llama-cpp-python llama-index python-dotenv
-      
+echo "\
+import torch
+print(torch.cuda.is_available())
+" | python3      
 
 export TRANSFORMERS_CACHE="$WORK/sites-and-stories-nlp-jupyterenv"
 
