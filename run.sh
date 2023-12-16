@@ -68,7 +68,7 @@ print(torch.cuda.is_available())
 #export TRANSFORMERS_CACHE="$WORK/sites-and-stories-nlp-jupyterenv"
 
 
-echo "TACC: running on node $NODE_HOSTNAME_PREFIX on $NODE_HOSTNAME_DOMAIN$WORK/sites-and-stories-nlp-jupyterenv"
+echo "TACC: running on node $NODE_HOSTNAME_PREFIX on $NODE_HOSTNAME_DOMAIN"
 
 TAP_FUNCTIONS="/share/doc/slurm/tap_functions"
 if [ -f ${TAP_FUNCTIONS} ]; then
