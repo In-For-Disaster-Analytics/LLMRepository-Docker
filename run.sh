@@ -31,7 +31,7 @@ if [ ! -d "$WORK/miniconda3" ]; then
   echo "Miniconda not found in $WORK..."
   echo "Installing..."
   mkdir -p $WORK/miniconda3
-  wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O $WORK/miniconda3/miniconda.sh
+  curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o $WORK/miniconda3/miniconda.sh
   bash $WORK/miniconda3/miniconda.sh -b -u -p $WORK/miniconda3
   rm -rf $WORK/miniconda3/miniconda.sh
 
@@ -39,20 +39,25 @@ if [ ! -d "$WORK/miniconda3" ]; then
   conda config --set auto_activate_base false
 fi
 
-echo "Initializing conda..."
-$WORK/miniconda3/bin/conda init bash
+export PATH="$WORK/miniconda3/bin:$PATH"
+conda init bash
 echo "Sourcing .bashrc..."
 source ~/.bashrc
+unset PYTHONPATH
+
+echo "Initializing conda..."
 conda info
+## Path to the python environment where the jupyter notebook packages are installed
 
 if [ ! -d "$WORK/sites-and-stories-nlp-jupyterenv" ]; then
     echo "Env not found, downloading"
     wget https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp/archive/refs/heads/jupyterenv.zip
     unzip *.zip -d $WORK
-    CONDA_PKGS_DIRS=$(mktemp -d) conda create -n llm -f $WORK/sites-and-stories-nlp-jupyterenv/.binder/environment.yml
+    conda env create -n llm -f $WORK/sites-and-stories-nlp-jupyterenv/.binder/environment.yml
 fi
 echo "Installing Conda env"
-python -m ipykernel install --user --name llm --display-name "Python (llm)"
+#python3 -m ipykernel install --user --name llm --display-name "Python (llm)"
+conda env list --json
 conda activate llm
 pip install transformers[torch] ipyfilechooser pypdf ema-workbench huggingface-hub llama-cpp-python llama-index python-dotenv
 echo "\
@@ -103,6 +108,7 @@ if [ ! -f ${TAP_CERTFILE} ]; then
     exit 1
 fi
 
+#
 # bail if we cannot create a token for the session
 TAP_TOKEN=$(tap_get_token)
 if [ -z "${TAP_TOKEN}" ]; then
@@ -197,7 +203,7 @@ fi
 
 # Webhook callback url for job ready notification.
 # Notification is sent to _INTERACTIVE_WEBHOOK_URL, e.g. https://3dem.org/webhooks/interactive/
-curl -k --data "event_type=WEB&address=${JUPYTER_URL}&owner=${AGAVE_JOB_OWNER}&job_uuid=${AGAVE_JOB_ID}" $INTERACTIVE_WEBHOOK_URL &
+#curl -k --data "event_type=WEB&address=${JUPYTER_URL}&owner=${AGAVE_JOB_OWNER}&job_uuid=${AGAVE_JOB_ID}" $INTERACTIVE_WEBHOOK_URL &
 
 # Delete the session file to kill the job.
 echo $NODE_HOSTNAME_LONG $IPYTHON_PID > $SESSION_FILE
