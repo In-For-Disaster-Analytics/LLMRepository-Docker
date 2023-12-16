@@ -59,13 +59,13 @@ echo "Installing Conda env"
 #python3 -m ipykernel install --user --name llm --display-name "Python (llm)"
 conda env list --json
 conda activate llm
-#pip install transformers[torch] ipyfilechooser pypdf ema-workbench huggingface-hub llama-cpp-python llama-index python-dotenv
+pip install transformers[torch] ipyfilechooser pypdf ema-workbench huggingface-hub llama-cpp-python llama-index python-dotenv
 echo "\
 import torch
 print(torch.cuda.is_available())
 " | python3
 
-export TRANSFORMERS_CACHE="$WORK/sites-and-stories-nlp-jupyterenv"
+#export TRANSFORMERS_CACHE="$WORK/sites-and-stories-nlp-jupyterenv"
 
 
 echo "TACC: running on node $NODE_HOSTNAME_PREFIX on $NODE_HOSTNAME_DOMAIN$WORK/sites-and-stories-nlp-jupyterenv"
