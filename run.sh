@@ -65,7 +65,7 @@ import torch
 print(torch.cuda.is_available())
 " | python3
 
-#export TRANSFORMERS_CACHE="$WORK/sites-and-stories-nlp-jupyterenv"
+export TRANSFORMERS_CACHE="$WORK/sites-and-stories-nlp-jupyterenv"
 
 
 echo "TACC: running on node $NODE_HOSTNAME_PREFIX on $NODE_HOSTNAME_DOMAIN"
