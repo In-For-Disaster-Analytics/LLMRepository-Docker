@@ -39,11 +39,15 @@ if [ ! -d "$WORK/miniconda3" ]; then
   conda config --set auto_activate_base false
 fi
 
-echo "Initializing conda..."
-$WORK/miniconda3/bin/conda init bash
+export PATH="$WORK/miniconda3/bin:$PATH"
+conda init bash
 echo "Sourcing .bashrc..."
 source ~/.bashrc
+unset PYTHONPATH
+
+echo "Initializing conda..."
 conda info
+## Path to the python environment where the jupyter notebook packages are installed
 
 if [ ! -d "$WORK/sites-and-stories-nlp-jupyterenv" ]; then
     echo "Env not found, downloading"
@@ -52,7 +56,7 @@ if [ ! -d "$WORK/sites-and-stories-nlp-jupyterenv" ]; then
     CONDA_PKGS_DIRS=$(mktemp -d) conda create -n llm -f $WORK/sites-and-stories-nlp-jupyterenv/.binder/environment.yml
 fi
 echo "Installing Conda env"
-python3 -m ipykernel install --user --name llm --display-name "Python (llm)"
+#python3 -m ipykernel install --user --name llm --display-name "Python (llm)"
 conda env list --json
 conda activate llm
 pip install transformers[torch] ipyfilechooser pypdf ema-workbench huggingface-hub llama-cpp-python llama-index python-dotenv
