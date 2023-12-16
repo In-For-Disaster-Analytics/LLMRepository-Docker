@@ -52,7 +52,7 @@ if [ ! -d "$WORK/sites-and-stories-nlp-jupyterenv" ]; then
     CONDA_PKGS_DIRS=$(mktemp -d) conda create -n llm -f $WORK/sites-and-stories-nlp-jupyterenv/.binder/environment.yml
 fi
 echo "Installing Conda env"
-python -m ipykernel install --user --name llm --display-name "Python (llm)"
+python3 -m ipykernel install --user --name llm --display-name "Python (llm)"
 conda activate llm
 pip install transformers[torch] ipyfilechooser pypdf ema-workbench huggingface-hub llama-cpp-python llama-index python-dotenv
 echo "\
