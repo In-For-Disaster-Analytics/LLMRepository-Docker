@@ -108,6 +108,7 @@ if [ ! -f ${TAP_CERTFILE} ]; then
     exit 1
 fi
 
+#
 # bail if we cannot create a token for the session
 TAP_TOKEN=$(tap_get_token)
 if [ -z "${TAP_TOKEN}" ]; then
@@ -202,7 +203,7 @@ fi
 
 # Webhook callback url for job ready notification.
 # Notification is sent to _INTERACTIVE_WEBHOOK_URL, e.g. https://3dem.org/webhooks/interactive/
-curl -k --data "event_type=WEB&address=${JUPYTER_URL}&owner=${AGAVE_JOB_OWNER}&job_uuid=${AGAVE_JOB_ID}" $INTERACTIVE_WEBHOOK_URL &
+#curl -k --data "event_type=WEB&address=${JUPYTER_URL}&owner=${AGAVE_JOB_OWNER}&job_uuid=${AGAVE_JOB_ID}" $INTERACTIVE_WEBHOOK_URL &
 
 # Delete the session file to kill the job.
 echo $NODE_HOSTNAME_LONG $IPYTHON_PID > $SESSION_FILE
