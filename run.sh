@@ -31,7 +31,7 @@ if [ ! -d "$WORK/miniconda3" ]; then
   echo "Miniconda not found in $WORK..."
   echo "Installing..."
   mkdir -p $WORK/miniconda3
-  wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O $WORK/miniconda3/miniconda.sh
+  curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o $WORK/miniconda3/miniconda.sh
   bash $WORK/miniconda3/miniconda.sh -b -u -p $WORK/miniconda3
   rm -rf $WORK/miniconda3/miniconda.sh
 
