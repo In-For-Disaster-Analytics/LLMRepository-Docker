@@ -41,9 +41,9 @@ fi
 
 echo "Initializing conda..."
 $WORK/miniconda3/bin/conda init bash
-conda info
 echo "Sourcing .bashrc..."
 source ~/.bashrc
+conda info
 
 if [ ! -d "$WORK/sites-and-stories-nlp-jupyterenv" ]; then
     echo "Env not found, downloading"
