@@ -50,9 +50,10 @@ if [ ! -d "$WORK/sites-and-stories-nlp-jupyterenv" ]; then
     echo "Env not found, downloading"
     wget https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp/archive/refs/heads/jupyterenv.zip
     unzip *.zip -d $WORK
-    conda env create -n llm -f $WORK/sites-and-stories-nlp-jupyterenv/.binder/environment.yml
+    conda env create -n llm -f $WORK/sites-and-stories-nlp-jupyterenv/.binder/environment.yml --force
 fi
 echo "Installing Conda env"
+conda install pytorch torchvision -c pytorch 
 conda env list --json
 conda activate llm
 pip install transformers[torch] ipyfilechooser pypdf ema-workbench huggingface-hub llama-cpp-python llama-index python-dotenv 
