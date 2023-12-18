@@ -4,10 +4,7 @@ set -xe
 echo "TACC: job ${SLURM_JOB_ID} execution at: $(date)"
 echo load cuda
 module load cuda/12.0
-echo "\
-import torch
-print(torch.cuda.is_available())
-" | python3
+
 
 
 # This file will be located in the directory mounted by the job.
@@ -56,14 +53,16 @@ if [ ! -d "$WORK/sites-and-stories-nlp-jupyterenv" ]; then
     conda env create -n llm -f $WORK/sites-and-stories-nlp-jupyterenv/.binder/environment.yml
 fi
 echo "Installing Conda env"
-#python3 -m ipykernel install --user --name llm --display-name "Python (llm)"
 conda env list --json
 conda activate llm
-pip install transformers[torch] ipyfilechooser pypdf ema-workbench huggingface-hub llama-cpp-python llama-index python-dotenv
-echo "\
-import torch
-print(torch.cuda.is_available())
-" | python3
+pip install transformers[torch] ipyfilechooser pypdf ema-workbench huggingface-hub llama-cpp-python llama-index python-dotenv 
+
+python3 -m ipykernel install --user --name llm --display-name "Python (llm)"
+
+# echo "\
+# import torch
+# print(torch.cuda.is_available())
+# " | python3
 
 export TRANSFORMERS_CACHE="$WORK/sites-and-stories-nlp-jupyterenv"
 
