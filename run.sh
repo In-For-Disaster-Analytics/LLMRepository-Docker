@@ -31,7 +31,7 @@ if [ ! -d "$WORK/miniconda3" ]; then
   echo "Installing..."
   mkdir -p $WORK/miniconda3
   curl https://repo.anaconda.com/miniconda/Miniconda3-py311_23.10.0-1-Linux-x86_64.sh -o $WORK/miniconda3/miniconda.sh
-  
+  #The latest repo from miniconda does not install correctly. Use the prior one for the next month of so. Dec 19, 2023
 #   curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o $WORK/miniconda3/miniconda.sh
   bash $WORK/miniconda3/miniconda.sh -b -u -p $WORK/miniconda3
   rm -rf $WORK/miniconda3/miniconda.sh
@@ -52,30 +52,17 @@ unset PYTHONPATH
 echo "Initializing conda..."
 conda info
 ## Path to the python environment where the jupyter notebook packages are installed
-
 if [ ! -d "$git_repo" ]; then
     echo "Env not found, downloading"
-    # wget https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp/archive/refs/heads/jupyterenv.zip
-    # unzip *.zip -d $WORK
+    
     git clone  https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp.git --branch jupyterenv $git_repo
-    conda env create -n llm -f $git_repo/.binder/environment.yml --force
+    # conda env create -n llm -f $git_repo/.binder/environment.yml --force
 else
     git -C $git_repo pull origin jupyterenv 
 
-    conda env update -n llm  -f $git_repo/.binder/environment.yml --prune
+    # conda env update -n llm  -f $git_repo/.binder/environment.yml --prune
     echo "Installing Conda env"
 fi
-
-
-conda env list --json
-conda activate llm
-pip install transformers jupyter ipyfilechooser pypdf ema-workbench huggingface-hub llama-cpp-python llama-index python-dotenv 
-python3 -m ipykernel install --user --name llm --display-name "Python (llm)"
-
-# echo "\
-# import torch
-# print(torch.cuda.is_available())
-# " | python3
 
 export TRANSFORMERS_CACHE="$git_repo"
 
@@ -168,8 +155,6 @@ echo "TACC: got login node jupyter port ${LOGIN_PORT}"
 
 JUPYTER_URL="https://${NODE_HOSTNAME_DOMAIN}:${LOGIN_PORT}/?token=${TAP_TOKEN}"
 
-echo "JUPYTER_URL is"
-echo  $JUPYTER_URL
 
 # verify jupyter is up. if not, give one more try, then bail
 if ! $(ps -fu ${USER} | grep ${JUPYTER_BIN} | grep -qv grep) ; then
@@ -220,6 +205,14 @@ fi
 # Delete the session file to kill the job.
 echo $NODE_HOSTNAME_LONG $IPYTHON_PID > $SESSION_FILE
 
+### Create env
+conda env create -n llm -f $git_repo/.binder/environment.yml --force
+conda activate llm 
+pip install -r $git_repo/.binder/requirements.txt
+python -m ipykernel install --user --name llm --display-name "Python (llm)"
+
+echo "JUPYTER_URL is"
+echo  $JUPYTER_URL
 # While the session file remains undeleted, keep Jupyter session running.
 while [ -f $SESSION_FILE ] ; do
     sleep 10
