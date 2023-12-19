@@ -1,5 +1,7 @@
 #!/bin/bash
 set -xe
+#Set Path to repo
+export git_repo="$WORK/sites-and-stories-nlp"
 
 echo "TACC: job ${SLURM_JOB_ID} execution at: $(date)"
 echo load cuda
@@ -28,15 +30,20 @@ if [ ! -d "$WORK/miniconda3" ]; then
   echo "Miniconda not found in $WORK..."
   echo "Installing..."
   mkdir -p $WORK/miniconda3
-  curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o $WORK/miniconda3/miniconda.sh
+  curl https://repo.anaconda.com/miniconda/Miniconda3-py311_23.10.0-1-Linux-x86_64.sh -o $WORK/miniconda3/miniconda.sh
+  
+#   curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o $WORK/miniconda3/miniconda.sh
   bash $WORK/miniconda3/miniconda.sh -b -u -p $WORK/miniconda3
   rm -rf $WORK/miniconda3/miniconda.sh
-
+  export PATH="$WORK/miniconda3/bin:$PATH"
   echo "Ensuring conda base environment is OFF..."
   conda config --set auto_activate_base false
+else
+  export PATH="$WORK/miniconda3/bin:$PATH"
 fi
 
-export PATH="$WORK/miniconda3/bin:$PATH"
+
+
 conda init bash
 echo "Sourcing .bashrc..."
 source ~/.bashrc
@@ -46,18 +53,23 @@ echo "Initializing conda..."
 conda info
 ## Path to the python environment where the jupyter notebook packages are installed
 
-if [ ! -d "$WORK/sites-and-stories-nlp-jupyterenv" ]; then
+if [ ! -d "$git_repo" ]; then
     echo "Env not found, downloading"
-    wget https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp/archive/refs/heads/jupyterenv.zip
-    unzip *.zip -d $WORK
-    conda env create -n llm -f $WORK/sites-and-stories-nlp-jupyterenv/.binder/environment.yml --force
+    # wget https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp/archive/refs/heads/jupyterenv.zip
+    # unzip *.zip -d $WORK
+    git clone  https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp.git --branch jupyterenv $git_repo
+    conda env create -n llm -f $git_repo/.binder/environment.yml --force
+else
+    git -C $git_repo pull origin jupyterenv 
+
+    conda env update -n llm  -f $git_repo/.binder/environment.yml --prune
+    echo "Installing Conda env"
 fi
-echo "Installing Conda env"
-conda install pytorch torchvision -c pytorch 
+
+
 conda env list --json
 conda activate llm
-pip install transformers[torch] ipyfilechooser pypdf ema-workbench huggingface-hub llama-cpp-python llama-index python-dotenv 
-
+pip install transformers jupyter ipyfilechooser pypdf ema-workbench huggingface-hub llama-cpp-python llama-index python-dotenv 
 python3 -m ipykernel install --user --name llm --display-name "Python (llm)"
 
 # echo "\
@@ -65,7 +77,7 @@ python3 -m ipykernel install --user --name llm --display-name "Python (llm)"
 # print(torch.cuda.is_available())
 # " | python3
 
-export TRANSFORMERS_CACHE="$WORK/sites-and-stories-nlp-jupyterenv"
+export TRANSFORMERS_CACHE="$git_repo"
 
 
 echo "TACC: running on node $NODE_HOSTNAME_PREFIX on $NODE_HOSTNAME_DOMAIN"
@@ -134,10 +146,10 @@ c.${JUPYTER_SERVER_APP}.port = $LOCAL_PORT
 c.${JUPYTER_SERVER_APP}.open_browser = False
 c.${JUPYTER_SERVER_APP}.allow_origin = u"*"
 c.${JUPYTER_SERVER_APP}.ssl_options = {"ssl_version": ssl.PROTOCOL_TLSv1_2}
-c.${JUPYTER_SERVER_APP}.root_dir = "$WORK/sites-and-stories-nlp-jupyterenv"
-c.${JUPYTER_SERVER_APP}.preferred_dir = "$WORK/sites-and-stories-nlp-jupyterenv"
+c.${JUPYTER_SERVER_APP}.root_dir = "$git_repo"
+c.${JUPYTER_SERVER_APP}.preferred_dir = "$git_repo"
 c.IdentityProvider.token = "${TAP_TOKEN}"
-c.NotebookApp.notebook_dir = '$WORK/sites-and-stories-nlp-jupyterenv'
+c.NotebookApp.notebook_dir = '$git_repo'
 c.MultiKernelManager.default_kernel_name = 'llm'
 EOF
 
