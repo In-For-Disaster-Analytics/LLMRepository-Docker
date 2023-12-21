@@ -206,13 +206,19 @@ fi
 echo $NODE_HOSTNAME_LONG $IPYTHON_PID > $SESSION_FILE
 
 ### Create env
-conda env create -n llm -f $git_repo/.binder/environment.yml --force
-conda activate llm 
-pip install -r $git_repo/.binder/requirements.txt
-python -m ipykernel install --user --name llm --display-name "Python (llm)"
-
+if { conda env list | grep 'llm'; } >/dev/null 2>&1; then
+    conda activate llm 
+    conda env update --file $git_repo/.binder/environment.yml --prune 
+    pip install -r $git_repo/.binder/requirements.txt
+else
+    conda env create -n llm -f $git_repo/.binder/environment.yml --force
+    conda activate llm 
+    pip install -r $git_repo/.binder/requirements.txt
+    python -m ipykernel install --user --name llm --display-name "Python (llm)"  
+fi
 echo "JUPYTER_URL is"
 echo  $JUPYTER_URL
+
 # While the session file remains undeleted, keep Jupyter session running.
 while [ -f $SESSION_FILE ] ; do
     sleep 10
