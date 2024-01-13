@@ -1,7 +1,7 @@
 #!/bin/bash
 set -xe
 #Set Path to repo
-export git_repo="$WORK/sites-and-stories-nlp"
+export git_repo=${_tapisJobWorkingDir}/sites-and-stories-nlp
 
 echo "TACC: job ${SLURM_JOB_ID} execution at: $(date)"
 echo load cuda
