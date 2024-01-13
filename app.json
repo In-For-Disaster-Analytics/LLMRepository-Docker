@@ -38,6 +38,15 @@
           "notes": {
             "isHidden": true
           }
+        },
+        {
+          "name": "NVIDIA Flag",
+          "description": "Flag to enable NVIDIA cuda",
+          "inputMode": "FIXED",
+          "arg": "--nv",
+          "notes": {
+            "isHidden": true
+          }
         }
       ],
       "schedulerOptions": [
@@ -60,7 +69,17 @@
           }
         }
       ],
-      "envVariables": [],
+      "envVariables": [
+        {
+          "key": "APPTAINER_PWD",
+          "value": "/home/jovyan/work",
+          "description": "Start terminals in the working directory where host volumes are mounted.",
+          "inputMode": "FIXED",
+          "notes": {
+            "isHidden": true
+          }
+        }
+      ],
       "archiveFilter": {
         "includes": [],
         "excludes": [],
@@ -70,17 +89,21 @@
     "fileInputs": [],
     "fileInputArrays": [],
     "nodeCount": 1,
+    "coresPerNode": 16,
+    "memoryMB": 128000,
     "maxMinutes": 120,
     "subscriptions": [],
     "tags": []
   },
   "tags": ["portalName: ALL"],
   "notes": {
-    "label": "LLama Index Environment",
+    "label": "LLama Index Environment (LoneStar 6)",
     "helpUrl": "https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp/tree/jupyterenv",
-    "hideNodeCountAndCoresPerNode": false,
+    "helpText": "This app is a Jupyter Lab environment that allows you to use LLama to index data on the TACC Cloud Data Archive. It is a work in progress and is not yet fully functional.",
+    "hideNodeCountAndCoresPerNode": true,
     "isInteractive": true,
     "icon": "jupyter",
-    "category": "Data Processing"
+    "category": "Data Processing",
+    "queueFilter": ["gpu-a100", "gpu-a100-small", "gpu-a100-dev"]
   }
 }
