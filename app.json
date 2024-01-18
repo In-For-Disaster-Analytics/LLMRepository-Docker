@@ -1,13 +1,13 @@
 {
   "id": "jupyter-lab-hpc-ls6-llama",
-  "version": "sha-aa0bab0",
+  "version": "sha-2b4ff4e",
   "description": "Run an interactive Jupyter Lab session on an HPC compute node to use LLama.",
   "owner": "${apiUserId}",
   "enabled": true,
   "runtime": "SINGULARITY",
   "runtimeVersion": null,
   "runtimeOptions": ["SINGULARITY_RUN"],
-  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:sha-aa0bab0",
+  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:2b4ff4e",
   "jobType": "BATCH",
   "maxJobs": -1,
   "maxJobsPerUser": -1,
@@ -20,7 +20,7 @@
     "execSystemExecDir": "${JobWorkingDir}",
     "execSystemInputDir": "${JobWorkingDir}",
     "execSystemOutputDir": "${JobWorkingDir}/output",
-    "execSystemLogicalQueue": "development",
+    "execSystemLogicalQueue": "gpu-a100",
     "archiveSystemId": "cloud.data",
     "archiveSystemDir": "HOST_EVAL($HOME)/tapis-jobs-archive/${JobCreateDate}/${JobName}-${JobUUID}",
     "archiveOnAppError": true,
@@ -104,6 +104,6 @@
     "isInteractive": true,
     "icon": "jupyter",
     "category": "Data Processing",
-    "queueFilter": ["gpu-a100", "gpu-a100-small", "gpu-a100-dev"]
+    "queueFilter": ["gpu-a100", "gpu-a100-dev"]
   }
 }
