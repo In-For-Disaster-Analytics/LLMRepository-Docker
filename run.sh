@@ -174,8 +174,11 @@ fi
 #
 # Create a reverse tunnel port from the compute node to the login nodes.
 # Make one tunnel for each login so the user can just connect to stampede.tacc.utexas.edu.
+
+# Disable exit on error so we can check the ssh tunnel status.
+set +e
 for i in $(seq 2); do
-    ssh -q -f -g -N -R ${LOGIN_PORT}:${NODE_HOSTNAME_PREFIX}:${LOCAL_PORT} login${i}
+    ssh -o StrictHostKeyChecking=no -q -f -g -N -R ${LOGIN_PORT}:${NODE_HOSTNAME_PREFIX}:${LOCAL_PORT} login${i}
 done
 if [ $(ps -fu ${USER} | grep ssh | grep login | grep -vc grep) != 2 ]; then
     # jupyter will not be working today. sadness.
@@ -186,6 +189,8 @@ if [ $(ps -fu ${USER} | grep ssh | grep login | grep -vc grep) != 2 ]; then
     echo "TACC: job ${SLURM_JOB_ID} execution finished at: $(date)"
     exit 1
 fi
+# Re-enable exit on error.
+set -e
 
 INTERACTIVE_WEBHOOK_URL="${_webhook_base_url}"
 
