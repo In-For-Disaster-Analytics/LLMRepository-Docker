@@ -1,13 +1,11 @@
 #!/bin/bash
 set -xe
 #Set Path to repo
-export git_repo=${_tapisJobWorkingDir}/sites-and-stories-nlp
+export git_repo_working_dir=${WORK}/sites-and-stories-nlp
 
 echo "TACC: job ${SLURM_JOB_ID} execution at: $(date)"
 echo load cuda
 module load cuda/12.0
-
-
 
 # This file will be located in the directory mounted by the job.
 SESSION_FILE=delete_me_to_end_session
@@ -22,8 +20,6 @@ LOCAL_PORT=5902
 NODE_HOSTNAME_PREFIX=$(hostname -s)   # Short Host Name  -->  name of compute node: c###-###
 NODE_HOSTNAME_DOMAIN=$(hostname -d)   # DNS Name  -->  stampede2.tacc.utexas.edu
 NODE_HOSTNAME_LONG=$(hostname -f)     # Fully Qualified Domain Name  -->  c###-###.stampede2.tacc.utexas.edu
-
-
 
 echo "Checking if miniconda3 is installed..."
 if [ ! -d "$WORK/miniconda3" ]; then
@@ -42,8 +38,6 @@ else
   export PATH="$WORK/miniconda3/bin:$PATH"
 fi
 
-
-
 conda init bash
 echo "Sourcing .bashrc..."
 source ~/.bashrc
@@ -52,19 +46,16 @@ unset PYTHONPATH
 echo "Initializing conda..."
 conda info
 ## Path to the python environment where the jupyter notebook packages are installed
-if [ ! -d "$git_repo" ]; then
+if [ ! -d "$git_repo_working_dir" ]; then
     echo "Env not found, downloading"
-
-    git clone  https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp.git --branch jupyterenv $git_repo
-    # conda env create -n llm -f $git_repo/.binder/environment.yml --force
-else
-    git -C $git_repo pull origin jupyterenv
-
-    # conda env update -n llm  -f $git_repo/.binder/environment.yml --prune
-    echo "Installing Conda env"
+    git clone  https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp.git --branch jupyterenv $git_repo_working_dir
+    # conda env create -n llm -f $git_repo_working_dir/.binder/environment.yml --force
+#else
+    # git -C $git_repo_working_dir pull origin jupyterenv
+    # conda env update -n llm  -f $git_repo_working_dir/.binder/environment.yml --prune
 fi
 
-export TRANSFORMERS_CACHE="$git_repo"
+export TRANSFORMERS_CACHE="$git_repo_working_dir"
 
 
 echo "TACC: running on node $NODE_HOSTNAME_PREFIX on $NODE_HOSTNAME_DOMAIN"
@@ -107,7 +98,6 @@ if [ ! -f ${TAP_CERTFILE} ]; then
     exit 1
 fi
 
-#
 # bail if we cannot create a token for the session
 TAP_TOKEN=$(tap_get_token)
 if [ -z "${TAP_TOKEN}" ]; then
@@ -133,10 +123,9 @@ c.${JUPYTER_SERVER_APP}.port = $LOCAL_PORT
 c.${JUPYTER_SERVER_APP}.open_browser = False
 c.${JUPYTER_SERVER_APP}.allow_origin = u"*"
 c.${JUPYTER_SERVER_APP}.ssl_options = {"ssl_version": ssl.PROTOCOL_TLSv1_2}
-c.${JUPYTER_SERVER_APP}.root_dir = "${_tapisJobWorkingDir}"
-c.${JUPYTER_SERVER_APP}.preferred_dir = "${_tapisJobWorkingDir}"
+c.${JUPYTER_SERVER_APP}.root_dir = "${NB_HOME}/work"
+c.${JUPYTER_SERVER_APP}.preferred_dir = "${NB_HOME}/work"
 c.IdentityProvider.token = "${TAP_TOKEN}"
-c.NotebookApp.notebook_dir = '$git_repo'
 c.MultiKernelManager.default_kernel_name = 'llm'
 EOF
 
@@ -213,12 +202,12 @@ echo $NODE_HOSTNAME_LONG $IPYTHON_PID > $SESSION_FILE
 ### Create env
 if { conda env list | grep 'llm'; } >/dev/null 2>&1; then
     conda activate llm
-    conda env update --file $git_repo/.binder/environment.yml --prune
-    pip install --no-cache-dir -r $git_repo/.binder/requirements.txt
+    conda env update --file $git_repo_working_dir/.binder/environment.yml --prune
+    pip install --no-cache-dir -r $git_repo_working_dir/.binder/requirements.txt
 else
-    conda env create -n llm -f $git_repo/.binder/environment.yml --force
+    conda env create -n llm -f $git_repo_working_dir/.binder/environment.yml --force
     conda activate llm
-    pip install --no-cache-dir -r $git_repo/.binder/requirements.txt
+    pip install --no-cache-dir -r $git_repo_working_dir/.binder/requirements.txt
     python -m ipykernel install --user --name llm --display-name "Python (llm)"
 fi
 echo "JUPYTER_URL is"
