@@ -51,6 +51,17 @@ unset PYTHONPATH
 
 echo "Initializing conda..."
 conda info
+
+## Check Home directory isn't to full. 
+SIZE=11000000000
+
+CHECK="`du -shb "$HOME" | cut -f1`"
+if [ $CHECK -lt $SIZE ] ;then
+    echo "TACC: ERROR - $HOME Directory is Full"
+    echo "TACC: Please reduce storage and rerun."
+    exit 1
+fi
+
 ## Path to the python environment where the jupyter notebook packages are installed
 if [ ! -d "$git_repo" ]; then
     echo "Env not found, downloading"
