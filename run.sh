@@ -5,7 +5,7 @@ date_str=$(date +%Y-%m-%d-%H-%M-%S)
 cookbook_name="sites-and-stories-nlp"
 cookbooks_dir=${WORK}/cookbooks
 cookbook_archive_dir=${cookbooks_dir}/archive/${cookbook_name}/${date_str}
-export git_repo_working_dir=${WORK}/${cookbook_name}
+export git_repo_working_dir=${cookbooks_dir}/${cookbook_name}
 
 echo "TACC: job ${SLURM_JOB_ID} execution at: $(date)"
 echo load cuda
