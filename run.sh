@@ -1,7 +1,11 @@
 #!/bin/bash
 set -xe
 #Set Path to repo
-export git_repo_working_dir=${WORK}/sites-and-stories-nlp
+date_str=$(date +%Y-%m-%d-%H-%M-%S)
+cookbook_name="sites-and-stories-nlp"
+cookbooks_dir=${WORK}/cookbooks
+cookbook_archive_dir=${cookbooks_dir}/archive/${cookbook_name}/${date_str}
+export git_repo_working_dir=${WORK}/${cookbook_name}
 
 echo "TACC: job ${SLURM_JOB_ID} execution at: $(date)"
 echo load cuda
@@ -27,8 +31,6 @@ if [ ! -d "$WORK/miniconda3" ]; then
   echo "Installing..."
   mkdir -p $WORK/miniconda3
   curl https://repo.anaconda.com/miniconda/Miniconda3-py311_23.10.0-1-Linux-x86_64.sh -o $WORK/miniconda3/miniconda.sh
-  #The latest repo from miniconda does not install correctly. Use the prior one for the next month of so. Dec 19, 2023
-#   curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o $WORK/miniconda3/miniconda.sh
   bash $WORK/miniconda3/miniconda.sh -b -u -p $WORK/miniconda3
   rm -rf $WORK/miniconda3/miniconda.sh
   export PATH="$WORK/miniconda3/bin:$PATH"
@@ -49,14 +51,12 @@ conda info
 if [ ! -d "$git_repo_working_dir" ]; then
     echo "Env not found, downloading"
     git clone  https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp.git --branch jupyterenv $git_repo_working_dir
-    # conda env create -n llm -f $git_repo_working_dir/.binder/environment.yml --force
-#else
-    # git -C $git_repo_working_dir pull origin jupyterenv
-    # conda env update -n llm  -f $git_repo_working_dir/.binder/environment.yml --prune
+else
+    mkdir -p ${cookbook_archive_dir}
+    git clone  https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp.git --branch jupyterenv ${cookbook_archive_dir}
 fi
 
 export TRANSFORMERS_CACHE="$git_repo_working_dir"
-
 
 echo "TACC: running on node $NODE_HOSTNAME_PREFIX on $NODE_HOSTNAME_DOMAIN"
 
@@ -209,8 +209,6 @@ echo $NODE_HOSTNAME_LONG $IPYTHON_PID > $SESSION_FILE
 ### Create env
 if { conda env list | grep 'llm'; } >/dev/null 2>&1; then
     conda activate llm
-    conda env update --file $git_repo_working_dir/.binder/environment.yml --prune
-    pip install --no-cache-dir -r $git_repo_working_dir/.binder/requirements.txt
 else
     conda env create -n llm -f $git_repo_working_dir/.binder/environment.yml --force
     conda activate llm

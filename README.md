@@ -1,6 +1,6 @@
 # LLMRepository-Docker
 
-## Files
+# Files
 
 - `app.json` Tapis app definition file.
 - `Dockerfile`: Dockerfile for building the image prepared to use GPUs.
