@@ -1,6 +1,6 @@
 {
   "id": "jupyter-lab-llama-ls6-dev",
-  "version": "sha-6b54ed2",
+  "version": "sha-6b54ed3",
   "description": "Run an interactive Jupyter Lab session on an HPC compute node to use LLama.",
   "owner": "${apiUserId}",
   "enabled": true,
@@ -26,7 +26,7 @@
     "archiveOnAppError": true,
     "isMpi": false,
     "mpiCmd": null,
-    "cmdPrefix": "mkdir $PWD/Work $PWD/Home $PWD/Scratch;",
+    "cmdPrefix": "mkdir work;",
     "parameterSet": {
       "appArgs": [],
       "containerArgs": [
@@ -34,7 +34,7 @@
           "name": "Jupyter Mounts",
           "description": "Mount for TAP functions and user dirs",
           "inputMode": "FIXED",
-          "arg": "--bind /share,$STOCKYARD:$PWD/Work,$HOME:$PWD/Home,$SCRATCH:$PWD/Scratch",
+          "arg": "--bind /share,$PWD/work:/home/jovyan/work,$STOCKYARD:/home/jovyan/work/Work,$HOME:/home/jovyan/work/Home,$SCRATCH:/home/jovyan/work/Scratch",
           "notes": {
             "isHidden": true
           }
