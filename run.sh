@@ -66,14 +66,14 @@ function clone_cookbook_on_workspace() {
 }
 
 function clone_cookbook_on_archive() {
-	if [ ! -d "${cookbook_archive_dir}" ]; then
-		mkdir -p ${cookbook_archive_dir}
-		git clone ${git_repo_url} --branch ${branch} ${cookbook_archive_dir}
-		chmod -R a-w ${cookbook_archive_dir}
+	if [ ! -d "${COOKBOOK_ARCHIVE_DIR}" ]; then
+		mkdir -p ${COOKBOOK_ARCHIVE_DIR}
+		git clone ${GIT_REPO_URL} --branch ${BRANCH} ${COOKBOOK_ARCHIVE_DIR}
+		chmod -R a-w ${COOKBOOK_ARCHIVE_DIR}
 	else
-		chmod -R a+w ${cookbook_archive_dir}
-		git -C ${cookbook_archive_dir} pull origin ${branch}
-		chmod -R a-w ${cookbook_archive_dir}
+		chmod -R a+w ${COOKBOOK_ARCHIVE_DIR}
+		git -C ${COOKBOOK_ARCHIVE_DIR} pull origin ${BRANCH}
+		chmod -R a-w ${COOKBOOK_ARCHIVE_DIR}
 	fi
 }
 
@@ -89,7 +89,6 @@ function init_directory() {
 function get_tap_certificate() {
 	mkdir -p ${HOME}/.tap # this should exist at this point, but just in case...
 	export TAP_CERTFILE=${HOME}/.tap/.${SLURM_JOB_ID}
-
 	# bail if we cannot create a secure session
 	if [ ! -f ${TAP_CERTFILE} ]; then
 		echo "TACC: ERROR - could not find TLS cert for secure session"
@@ -158,22 +157,7 @@ function run_jupyter() {
 }
 
 function port_fowarding() {
-
-	# Port forwarding is set up for the four login nodes.
-	#
-	#   f: Requests ssh to go to background just before command execution.
-	#      Used if ssh asks for passwords but the user wants it in the background. Implies -n too.
-	#   g: Allows remote hosts to connect to local forwarded ports
-	#   N: Do not execute a remote command. Useful for just forwarding ports.
-	#   R: Connections to given TCP port/Unix socket on remote (server) host forwarded to local side.
-	#
-	# Create a reverse tunnel port from the compute node to the login nodes.
-	# Make one tunnel for each login so the user can just connect to stampede.tacc.utexas.edu.
-
-	# RUN JUPYTER SESSION IN BACKGROUND  -->  CAN STAY THE SAME
 	LOCAL_IPY_PORT=8888
-
-	# TAP Port
 	LOCAL_PORT=5902
 	# Disable exit on error so we can check the ssh tunnel status.
 	set +e
