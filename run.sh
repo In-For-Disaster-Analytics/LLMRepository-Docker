@@ -144,6 +144,7 @@ function create_jupyter_configuration {
 	TAP_JUPYTER_CONFIG="${HOME}/.tap/jupyter_config.py"
 	JUPYTER_SERVER_APP="ServerApp"
 	JUPYTER_BIN="jupyter-lab"
+	LOCAL_PORT=5902
 	echo ${PWD}
 
 	cat <<-EOF >${TAP_JUPYTER_CONFIG}
@@ -195,7 +196,6 @@ function run_jupyter() {
 }
 
 function port_fowarding() {
-	LOCAL_IPY_PORT=8888
 	LOCAL_PORT=5902
 	# Disable exit on error so we can check the ssh tunnel status.
 	set +e
