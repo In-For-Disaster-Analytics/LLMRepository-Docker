@@ -32,8 +32,8 @@ function export_repo_variables() {
 	GIT_REPO_URL="https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp.git"
 	GIT_BRANCH="jupyterenv"
 	COOKBOOK_WORKSPACE_DIR=${COOKBOOK_DIR}/${COOKBOOK_NAME}
-	COOKBOOK_ARCHIVE_DIR=${COOKBOOK_DIR}/archive/${COOKBOOK_NAME}
-	COOKBOOK_ARCHIVE_PARENT_DIR=${COOKBOOK_DIR}/.archive
+	COOKBOOK_REPOSITORY_PARENT_DIR=${COOKBOOK_DIR}/.repository
+	COOKBOOK_REPOSITORY_DIR=${COOKBOOK_REPOSITORY_PARENT_DIR}/${COOKBOOK_NAME}
 	UPDATE_AVAILABLE_FILE=${COOKBOOK_WORKSPACE_DIR}/UPDATE_AVAILABLE.txt
 	NODE_HOSTNAME_PREFIX=$(hostname -s) # Short Host Name  -->  name of compute node: c###-###
 	NODE_HOSTNAME_DOMAIN=$(hostname -d) # DNS Name  -->  stampede2.tacc.utexas.edu
@@ -43,8 +43,8 @@ function export_repo_variables() {
 	export GIT_REPO_URL
 	export GIT_BRANCH
 	export COOKBOOK_WORKSPACE_DIR
-	export COOKBOOK_ARCHIVE_DIR
-	export COOKBOOK_ARCHIVE_PARENT_DIR
+	export COOKBOOK_REPOSITORY_DIR
+	export COOKBOOK_REPOSITORY_PARENT_DIR
 	export UPDATE_AVAILABLE_FILE
 	export NODE_HOSTNAME_PREFIX
 	export NODE_HOSTNAME_DOMAIN
@@ -58,12 +58,14 @@ function remove_update_available_file() {
 }
 
 function detect_update_available() {
-
 	git remote update
 	LAST_UPDATE=$(git show --no-notes --format=format:"%H" "${GIT_BRANCH}" | head -n 1)
 	LAST_COMMIT=$(git show --no-notes --format=format:"%H" "origin/${GIT_BRANCH}" | head -n 1)
 	if [ $LAST_COMMIT != $LAST_UPDATE ]; then
-		echo "Update available"
+		echo "Update available for ${COOKBOOK_NAME} cookbook" >"${UPDATE_AVAILABLE_FILE}"
+		echo "To update the conda environment. Please run" >>"${UPDATE_AVAILABLE_FILE}"
+		echo "conda env update --file ${COOKBOOK_REPOSITORY_DIR}/.binder/environment.yml --prune " >> "${UPDATE_AVAILABLE_FILE}"
+		echo "pip install --no-cache-dir -r ${COOKBOOK_REPOSITORY_DIR}/.binder/requirements.txt " >> "${UPDATE_AVAILABLE_FILE}"
 	fi
 }
 
@@ -78,19 +80,19 @@ function clone_cookbook_on_workspace() {
 }
 
 function clone_cookbook_on_archive() {
-	if [ ! -d "${COOKBOOK_ARCHIVE_DIR}" ]; then
-		mkdir -p ${COOKBOOK_ARCHIVE_DIR}
-		git clone ${GIT_REPO_URL} --branch ${GIT_BRANCH} ${COOKBOOK_ARCHIVE_DIR}
-		chmod -R a-w ${COOKBOOK_ARCHIVE_DIR}
+	if [ ! -d "${COOKBOOK_REPOSITORY_DIR}" ]; then
+		mkdir -p ${COOKBOOK_REPOSITORY_DIR}
+		git clone ${GIT_REPO_URL} --branch ${GIT_BRANCH} ${COOKBOOK_REPOSITORY_DIR}
+		chmod -R a-w ${COOKBOOK_REPOSITORY_DIR}
 	else
-		chmod -R a+w ${COOKBOOK_ARCHIVE_DIR}
-		git -C ${COOKBOOK_ARCHIVE_DIR} pull origin ${GIT_BRANCH}
-		chmod -R a-w ${COOKBOOK_ARCHIVE_DIR}
+		chmod -R a+w ${COOKBOOK_REPOSITORY_DIR}
+		git -C ${COOKBOOK_REPOSITORY_DIR} pull origin ${GIT_BRANCH}
+		chmod -R a-w ${COOKBOOK_REPOSITORY_DIR}
 	fi
 }
 
 function init_directory() {
-	mkdir -p ${COOKBOOK_ARCHIVE_PARENT_DIR}
+	mkdir -p ${COOKBOOK_REPOSITORY_PARENT_DIR}
 	remove_update_available_file
 	clone_cookbook_on_workspace
 	clone_cookbook_on_archive
