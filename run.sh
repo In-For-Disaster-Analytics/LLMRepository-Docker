@@ -31,10 +31,9 @@ function export_repo_variables() {
 	COOKBOOK_DIR=${WORK}/cookbooks
 	GIT_REPO_URL="https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp.git"
 	GIT_BRANCH="jupyterenv"
-	COOKBOOK_WORKSPACE_DIR=${COOKBOOK_DIR}/workspace/${COOKBOOK_NAME}
+	COOKBOOK_WORKSPACE_DIR=${COOKBOOK_DIR}/${COOKBOOK_NAME}
 	COOKBOOK_ARCHIVE_DIR=${COOKBOOK_DIR}/archive/${COOKBOOK_NAME}
-	COOKBOOK_ARCHIVE_PARENT_DIR=${COOKBOOK_DIR}/archive
-	COOKBOOKS_WORKSPACE_PARENT_DIR=${COOKBOOK_DIR}/workspace
+	COOKBOOK_ARCHIVE_PARENT_DIR=${COOKBOOK_DIR}/.archive
 	UPDATE_AVAILABLE_FILE=${COOKBOOK_WORKSPACE_DIR}/UPDATE_AVAILABLE.txt
 	NODE_HOSTNAME_PREFIX=$(hostname -s) # Short Host Name  -->  name of compute node: c###-###
 	NODE_HOSTNAME_DOMAIN=$(hostname -d) # DNS Name  -->  stampede2.tacc.utexas.edu
@@ -46,7 +45,6 @@ function export_repo_variables() {
 	export COOKBOOK_WORKSPACE_DIR
 	export COOKBOOK_ARCHIVE_DIR
 	export COOKBOOK_ARCHIVE_PARENT_DIR
-	export COOKBOOKS_WORKSPACE_PARENT_DIR
 	export UPDATE_AVAILABLE_FILE
 	export NODE_HOSTNAME_PREFIX
 	export NODE_HOSTNAME_DOMAIN
@@ -65,7 +63,7 @@ function detect_update_available() {
 	LAST_UPDATE=$(git show --no-notes --format=format:"%H" "${GIT_BRANCH}" | head -n 1)
 	LAST_COMMIT=$(git show --no-notes --format=format:"%H" "origin/${GIT_BRANCH}" | head -n 1)
 	if [ $LAST_COMMIT != $LAST_UPDATE ]; then
-		touch ${UPDATE_AVAILABLE_FILE}
+		echo "Update available"
 	fi
 }
 
@@ -93,8 +91,6 @@ function clone_cookbook_on_archive() {
 
 function init_directory() {
 	mkdir -p ${COOKBOOK_ARCHIVE_PARENT_DIR}
-	mkdir -p ${COOKBOOKS_WORKSPACE_PARENT_DIR}
-
 	remove_update_available_file
 	clone_cookbook_on_workspace
 	clone_cookbook_on_archive
