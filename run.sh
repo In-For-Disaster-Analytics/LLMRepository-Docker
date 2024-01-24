@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 function install_conda() {
 	## Install miniconda
 	echo "Checking if miniconda3 is installed..."
@@ -50,8 +51,8 @@ function remove_update_available_file() {
 
 function detect_update_available() {
 	git remote update
-	LAST_UPDATE=$(git show --no-notes --format=format:"%H" ${GIT_BRANCH} | head -n 1)
-	LAST_COMMIT=$(git show --no-notes --format=format:"%H" origin/$BRANCH | head -n 1)
+	LAST_UPDATE=$(git show --no-notes --format=format:"%H" "${GIT_BRANCH}" | head -n 1)
+	LAST_COMMIT=$(git show --no-notes --format=format:"%H" "origin/${GIT_BRANCH}" | head -n 1)
 	if [ $LAST_COMMIT != $LAST_UPDATE ]; then
 		touch ${UPDATE_AVAILABLE_FILE}
 	fi
@@ -68,11 +69,11 @@ function clone_cookbook_on_workspace() {
 function clone_cookbook_on_archive() {
 	if [ ! -d "${COOKBOOK_ARCHIVE_DIR}" ]; then
 		mkdir -p ${COOKBOOK_ARCHIVE_DIR}
-		git clone ${GIT_REPO_URL} --branch ${BRANCH} ${COOKBOOK_ARCHIVE_DIR}
+		git clone ${GIT_REPO_URL} --branch ${GIT_BRANCH} ${COOKBOOK_ARCHIVE_DIR}
 		chmod -R a-w ${COOKBOOK_ARCHIVE_DIR}
 	else
 		chmod -R a+w ${COOKBOOK_ARCHIVE_DIR}
-		git -C ${COOKBOOK_ARCHIVE_DIR} pull origin ${BRANCH}
+		git -C ${COOKBOOK_ARCHIVE_DIR} pull origin ${GIT_BRANCH}
 		chmod -R a-w ${COOKBOOK_ARCHIVE_DIR}
 	fi
 }
