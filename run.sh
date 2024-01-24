@@ -61,6 +61,7 @@ function remove_update_available_file() {
 }
 
 function detect_update_available() {
+
 	git remote update
 	LAST_UPDATE=$(git show --no-notes --format=format:"%H" "${GIT_BRANCH}" | head -n 1)
 	LAST_COMMIT=$(git show --no-notes --format=format:"%H" "origin/${GIT_BRANCH}" | head -n 1)
@@ -73,7 +74,9 @@ function clone_cookbook_on_workspace() {
 	if [ ! -d "$COOKBOOK_WORKSPACE_DIR" ]; then
 		git clone ${GIT_REPO_URL} --branch ${GIT_BRANCH} ${COOKBOOK_WORKSPACE_DIR}
 	else
+		pushd ${COOKBOOK_WORKSPACE_DIR}
 		detect_update_available
+		popd
 	fi
 }
 
