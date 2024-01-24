@@ -1,7 +1,6 @@
 #!/bin/bash
 
 function install_conda() {
-	## Install miniconda
 	echo "Checking if miniconda3 is installed..."
 	if [ ! -d "$WORK/miniconda3" ]; then
 		echo "Miniconda not found in $WORK..."
@@ -168,9 +167,28 @@ function create_jupyter_configuration {
 }
 
 function run_jupyter() {
+	JUPYTER_SERVER_APP="ServerApp"
+	JUPYTER_BIN="jupyter-lab"
 	JUPYTER_ARGS="--certfile=$(cat ${TAP_CERTFILE}) --config=${TAP_JUPYTER_CONFIG}"
 	nohup ${JUPYTER_BIN} ${JUPYTER_ARGS} &>${JUPYTER_LOGFILE} &
 	JUPYTER_PID=$!
+	# verify jupyter is up. if not, give one more try, then bail
+	if ! $(ps -fu ${USER} | grep ${JUPYTER_BIN} | grep -qv grep); then
+		# sometimes jupyter has a bad day. give it another chance to be awesome.
+		echo "TACC: first jupyter launch failed. Retrying..."
+		nohup ${JUPYTER_BIN} ${JUPYTER_ARGS} &>${JUPYTER_LOGFILE} &
+	fi
+
+	if ! $(ps -fu ${USER} | grep ${JUPYTER_BIN} | grep -qv grep); then
+		# jupyter will not be working today. sadness.
+		echo "TACC: ERROR - jupyter failed to launch"
+		echo "TACC: ERROR - this is often due to an issue in your python or conda environment"
+		echo "TACC: ERROR - jupyter logfile contents:"
+		cat ${JUPYTER_LOGFILE}
+		echo "TACC: job ${SLURM_JOB_ID} execution finished at: $(date)"
+		exit 1
+	fi
+
 }
 
 function port_fowarding() {
