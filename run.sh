@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 function install_conda() {
 	## Install miniconda
 	echo "Checking if miniconda3 is installed..."
@@ -29,23 +28,35 @@ function load_cuda() {
 }
 
 function export_repo_variables() {
-	export COOKBOOK_NAME="sites-and-stories-nlp"
-	export COOKBOOK_DIR=${WORK}/cookbooks
-	export GIT_REPO_URL="https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp.git"
-	export GIT_BRANCH="jupyterenv"
-	export COOKBOOK_WORKSPACE_DIR=${COOKBOOK_DIR}/workspace/${COOKBOOK_NAME}
-	export COOKBOOK_ARCHIVE_DIR=${COOKBOOK_DIR}/archive/${COOKBOOK_NAME}
-	export COOKBOOK_ARCHIVE_PARENT_DIR=${COOKBOOK_DIR}/archive
-	export COOKBOOKS_WORKSPACE_PARENT_DIR=${COOKBOOK_DIR}/workspace
-	export UPDATE_AVAILABLE_FILE=${COOKBOOK_WORKSPACE_DIR}/UPDATE_AVAILABLE.txt
-    export NODE_HOSTNAME_PREFIX=$(hostname -s) # Short Host Name  -->  name of compute node: c###-###
-    export NODE_HOSTNAME_DOMAIN=$(hostname -d) # DNS Name  -->  stampede2.tacc.utexas.edu
-    export NODE_HOSTNAME_LONG=$(hostname -f)   # Fully Qualified Domain Name  -->  c###-###.stampede2.tacc.utexas.edu
+	COOKBOOK_NAME="sites-and-stories-nlp"
+	COOKBOOK_DIR=${WORK}/cookbooks
+	GIT_REPO_URL="https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp.git"
+	GIT_BRANCH="jupyterenv"
+	COOKBOOK_WORKSPACE_DIR=${COOKBOOK_DIR}/workspace/${COOKBOOK_NAME}
+	COOKBOOK_ARCHIVE_DIR=${COOKBOOK_DIR}/archive/${COOKBOOK_NAME}
+	COOKBOOK_ARCHIVE_PARENT_DIR=${COOKBOOK_DIR}/archive
+	COOKBOOKS_WORKSPACE_PARENT_DIR=${COOKBOOK_DIR}/workspace
+	UPDATE_AVAILABLE_FILE=${COOKBOOK_WORKSPACE_DIR}/UPDATE_AVAILABLE.txt
+	NODE_HOSTNAME_PREFIX=$(hostname -s) # Short Host Name  -->  name of compute node: c###-###
+	NODE_HOSTNAME_DOMAIN=$(hostname -d) # DNS Name  -->  stampede2.tacc.utexas.edu
+	NODE_HOSTNAME_LONG=$(hostname -f)   # Fully Qualified Domain Name  -->  c###-###.stampede2.tacc.utexas.edu
+	export COOKBOOK_NAME
+	export COOKBOOK_DIR
+	export GIT_REPO_URL
+	export GIT_BRANCH
+	export COOKBOOK_WORKSPACE_DIR
+	export COOKBOOK_ARCHIVE_DIR
+	export COOKBOOK_ARCHIVE_PARENT_DIR
+	export COOKBOOKS_WORKSPACE_PARENT_DIR
+	export UPDATE_AVAILABLE_FILE
+	export NODE_HOSTNAME_PREFIX
+	export NODE_HOSTNAME_DOMAIN
+	export NODE_HOSTNAME_LONG
 }
 
 function remove_update_available_file() {
-	if [ -f ${UPDATE_AVAILABLE_FILE} ]; then
-		rm ${UPDATE_AVAILABLE_FILE}
+	if [ -f "${UPDATE_AVAILABLE_FILE}" ]; then
+		rm "${UPDATE_AVAILABLE_FILE}"
 	fi
 }
 
@@ -100,14 +111,16 @@ function get_tap_certificate() {
 
 function get_tap_token() {
 	# bail if we cannot create a token for the session
-	export TAP_TOKEN=$(tap_get_token)
+	TAP_TOKEN=$(tap_get_token)
 	if [ -z "${TAP_TOKEN}" ]; then
 		echo "TACC: ERROR - could not generate token for jupyter session"
 		echo "TACC: job ${SLURM_JOB_ID} execution finished at: $(date)"
 		exit 1
 	fi
 	echo "TACC: using token ${TAP_TOKEN}"
-	export LOGIN_PORT=$(tap_get_port)
+	LOGIN_PORT=$(tap_get_port)
+	export TAP_TOKEN
+	export LOGIN_PORT
 }
 
 function load_tap_functions() {
@@ -206,13 +219,12 @@ function install_dependencies() {
 	if { conda env list | grep 'llm'; } >/dev/null 2>&1; then
 		conda activate llm
 	else
-		conda env create -n llm -f $cookbook_workspace_dir/.binder/environment.yml --force
+		conda env create -n llm -f $COOKBOOK_WORKSPACE_DIR/.binder/environment.yml --force
 		conda activate llm
-		pip install --no-cache-dir -r $cookbook_workspace_dir/.binder/requirements.txt
+		pip install --no-cache-dir -r $COOKBOOK_WORKSPACE_DIR/.binder/requirements.txt
 		python -m ipykernel install --user --name llm --display-name "Python (llm)"
 	fi
 }
-
 
 set -xe
 install_conda
