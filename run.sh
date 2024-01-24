@@ -238,8 +238,8 @@ load_tap_functions
 get_tap_certificate
 get_tap_token
 create_jupyter_configuration
-port_fowarding
 install_dependencies
 run_jupyter
+port_fowarding
 send_url_to_webhook
 session_cleanup
