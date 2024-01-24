@@ -167,9 +167,12 @@ function create_jupyter_configuration {
 }
 
 function run_jupyter() {
+	NB_SERVERDIR=$HOME/.jupyter
 	JUPYTER_SERVER_APP="ServerApp"
 	JUPYTER_BIN="jupyter-lab"
 	JUPYTER_ARGS="--certfile=$(cat ${TAP_CERTFILE}) --config=${TAP_JUPYTER_CONFIG}"
+	JUPYTER_LOGFILE=${NB_SERVERDIR}/${NODE_HOSTNAME_PREFIX}.log
+	touch $JUPYTER_LOGFILE
 	nohup ${JUPYTER_BIN} ${JUPYTER_ARGS} &>${JUPYTER_LOGFILE} &
 	JUPYTER_PID=$!
 	# verify jupyter is up. if not, give one more try, then bail
