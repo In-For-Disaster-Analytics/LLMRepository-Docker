@@ -85,11 +85,8 @@ function clone_cookbook_on_archive() {
 	if [ ! -d "${COOKBOOK_REPOSITORY_DIR}" ]; then
 		mkdir -p ${COOKBOOK_REPOSITORY_DIR}
 		git clone ${GIT_REPO_URL} --branch ${GIT_BRANCH} ${COOKBOOK_REPOSITORY_DIR}
-		chmod -R a-w ${COOKBOOK_REPOSITORY_DIR}
 	else
-		chmod -R a+w ${COOKBOOK_REPOSITORY_DIR}
 		git -C ${COOKBOOK_REPOSITORY_DIR} pull origin ${GIT_BRANCH}
-		chmod -R a-w ${COOKBOOK_REPOSITORY_DIR}
 	fi
 }
 
