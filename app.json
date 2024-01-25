@@ -26,7 +26,7 @@
     "archiveOnAppError": true,
     "isMpi": false,
     "mpiCmd": null,
-    "cmdPrefix": "mkdir $PWD/Work $PWD/Home $PWD/Scratch;",
+    "cmdPrefix": "mkdir $PWD/work $PWD/home $PWD/scratch;",
     "parameterSet": {
       "appArgs": [],
       "containerArgs": [
@@ -34,7 +34,7 @@
           "name": "Jupyter Mounts",
           "description": "Mount for TAP functions and user dirs",
           "inputMode": "FIXED",
-          "arg": "--bind /share,$STOCKYARD:$PWD/Work,$HOME:$PWD/Home,$SCRATCH:$PWD/Scratch",
+          "arg": "--bind /share,$WORK:$PWD/work,$HOME:$PWD/home,$SCRATCH:$PWD/scratch",
           "notes": {
             "isHidden": true
           }
