@@ -28,6 +28,7 @@ function load_cuda() {
 
 function export_repo_variables() {
 	COOKBOOK_NAME="sites-and-stories-nlp"
+	COOKBOOK_CONDA_ENV="llm"
 	COOKBOOK_DIR=${WORK}/cookbooks
 	GIT_REPO_URL="https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp.git"
 	GIT_BRANCH="jupyterenv"
@@ -49,6 +50,7 @@ function export_repo_variables() {
 	export NODE_HOSTNAME_PREFIX
 	export NODE_HOSTNAME_DOMAIN
 	export NODE_HOSTNAME_LONG
+	export COOKBOOK_CONDA_ENV
 }
 
 function remove_update_available_file() {
@@ -64,8 +66,8 @@ function detect_update_available() {
 	if [ $LAST_COMMIT != $LAST_UPDATE ]; then
 		echo "Update available for ${COOKBOOK_NAME} cookbook" >"${UPDATE_AVAILABLE_FILE}"
 		echo "To update the conda environment. Please run" >>"${UPDATE_AVAILABLE_FILE}"
-		echo "conda env update --file ${COOKBOOK_REPOSITORY_DIR}/.binder/environment.yml --prune " >> "${UPDATE_AVAILABLE_FILE}"
-		echo "pip install --no-cache-dir -r ${COOKBOOK_REPOSITORY_DIR}/.binder/requirements.txt " >> "${UPDATE_AVAILABLE_FILE}"
+		echo "conda env update --file ${COOKBOOK_REPOSITORY_DIR}/.binder/environment.yml --prune " >>"${UPDATE_AVAILABLE_FILE}"
+		echo "pip install --no-cache-dir -r ${COOKBOOK_REPOSITORY_DIR}/.binder/requirements.txt " >>"${UPDATE_AVAILABLE_FILE}"
 	fi
 }
 
@@ -160,7 +162,7 @@ function create_jupyter_configuration {
 		c.${JUPYTER_SERVER_APP}.notebook_dir = "${_tapisJobWorkingDir}/work"
 		c.FileContentsManager.delete_to_trash = False
 		c.IdentityProvider.token = "${TAP_TOKEN}"
-		c.MultiKernelManager.default_kernel_name = 'llm'
+		c.MultiKernelManager.default_kernel_name = "${COOKBOOK_CONDA_ENV}"
 	EOF
 
 }
@@ -238,14 +240,17 @@ function session_cleanup() {
 
 function install_dependencies() {
 	### Create env
-	if { conda env list | grep 'llm'; } >/dev/null 2>&1; then
-		conda activate llm
+	if { conda env list | grep "${COOKBOOK_CONDA_ENV}"; } >/dev/null 2>&1; then
+		conda activate ${COOKBOOK_CONDA_ENV}
 	else
-		conda env create -n llm -f $COOKBOOK_WORKSPACE_DIR/.binder/environment.yml --force
-		conda activate llm
+		conda env create -n ${COOKBOOK_CONDA_ENV} -f $COOKBOOK_WORKSPACE_DIR/.binder/environment.yml --force
+		conda activate ${COOKBOOK_CONDA_ENV}
 		pip install --no-cache-dir -r $COOKBOOK_WORKSPACE_DIR/.binder/requirements.txt
-		python -m ipykernel install --user --name llm --display-name "Python (llm)"
+		python -m ipykernel install --user --name "${COOKBOOK_CONDA_ENV}" --display-name "Python (${COOKBOOK_CONDA_ENV})"
 	fi
+	conda install -n ${COOKBOOK_CONDA_ENV} -c conda-forge jupyterlab_widgets
+	conda install -n ${COOKBOOK_CONDA_ENV} -c conda-forge ipywidgets
+
 }
 
 set -xe
