@@ -2,7 +2,7 @@
 
 This repository contains the files needed to build a Docker image with a Conda environment for running the Tapis apps.
 
-This image can install **one conda environment** from a Git repository. The repository must contain a `./binder/environment.yml` file with the Conda environment definition, and optionally a `./binder/requirements.txt` file with additional Python dependencies.
+This image has been designed a **single conda environment** from a Git repository. The repository must contain a `./binder/environment.yml` file with the Conda environment definition, and optionally a `./binder/requirements.txt` file with additional Python dependencies.
 
 ## Installation process
 
@@ -13,8 +13,8 @@ When the job is submitted, the Tapis platform will pull the Docker image and run
 - `GIT_REPO_URL`: URL of the cookbook repository to use.
 - `GIT_BRANCH`: Branch of the cookbook repository to use.
 - `COOKBOOK_NAME`: Name of the cookbook, used for naming the directory
-- `COOKBOOK_WORKSPACE_DIR`: Directory where the cookbook repository will be cloned. If this directory exists, the script doesn't update the repository.
-- `COOKBOOK_REPOSITORY_DIR`: Directory where the cookbook repository will be cloned. If this directory exists, the script updates the cookbook. It is used to check for updates.
+- `COOKBOOK_WORKSPACE_DIR`: This is the designated directory for cloning the cookbook repository. If the directory already exists, the script does not perform an update. This directory serves as the active working directory during the Jupyter session, allowing direct interaction with the contents.
+- `COOKBOOK_REPOSITORY_DIR`: This directory is also used for cloning the cookbook repository. However, in contrast to `COOKBOOK_WORKSPACE_DIR`, if it already exists, the script updates the repository to ensure it contains the most recent changes. This directory is maintained as a hidden area, primarily utilized for update checks and not intended for direct user interaction.
 - `COOKBOOK_CONDA_ENV`: Name of the Conda environment to use.
 
 ## Execution
