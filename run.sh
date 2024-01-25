@@ -66,8 +66,8 @@ function detect_update_available() {
 	if [ $LAST_COMMIT != $LAST_UPDATE ]; then
 		echo "Update available for ${COOKBOOK_NAME} cookbook" >"${UPDATE_AVAILABLE_FILE}"
 		echo "To update the conda environment. Please run" >>"${UPDATE_AVAILABLE_FILE}"
-		echo "conda env update --file ${COOKBOOK_REPOSITORY_DIR}/.binder/environment.yml --prune " >> "${UPDATE_AVAILABLE_FILE}"
-		echo "pip install --no-cache-dir -r ${COOKBOOK_REPOSITORY_DIR}/.binder/requirements.txt " >> "${UPDATE_AVAILABLE_FILE}"
+		echo "conda env update --file ${COOKBOOK_REPOSITORY_DIR}/.binder/environment.yml --prune " >>"${UPDATE_AVAILABLE_FILE}"
+		echo "pip install --no-cache-dir -r ${COOKBOOK_REPOSITORY_DIR}/.binder/requirements.txt " >>"${UPDATE_AVAILABLE_FILE}"
 	fi
 }
 
@@ -249,7 +249,7 @@ function install_dependencies() {
 		python -m ipykernel install --user --name "${COOKBOOK_CONDA_ENV}" --display-name "Python (${COOKBOOK_CONDA_ENV})"
 	fi
 	conda install -n ${COOKBOOK_CONDA_ENV} -c conda-forge jupyterlab_widgets
-    conda install -n ${COOKBOOK_CONDA_ENV} -c conda-forge ipywidgets
+	conda install -n ${COOKBOOK_CONDA_ENV} -c conda-forge ipywidgets
 
 }
 
