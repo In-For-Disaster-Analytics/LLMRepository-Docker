@@ -2,7 +2,7 @@
 
 This repository contains the files needed to build a Docker image with a Conda environment for running the Tapis apps.
 
-This image has been designed a **single conda environment** from a Git repository. The repository must contain a `./binder/environment.yml` file with the Conda environment definition, and optionally a `./binder/requirements.txt` file with additional Python dependencies.
+This Docker image is specifically configured to install a singular Conda environment, based on the contents of a Git repository. The repository must contain a `./binder/environment.yml` file with the Conda environment definition, and optionally a `./binder/requirements.txt` file with additional Python dependencies.
 
 ## Installation process
 
