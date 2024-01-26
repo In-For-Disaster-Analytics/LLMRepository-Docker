@@ -138,6 +138,7 @@ function load_tap_functions() {
 }
 
 function create_jupyter_configuration {
+	mkdir -p ${HOME}/.tap
 	TAP_JUPYTER_CONFIG="${HOME}/.tap/jupyter_config.py"
 	JUPYTER_SERVER_APP="ServerApp"
 	JUPYTER_BIN="jupyter-lab"
