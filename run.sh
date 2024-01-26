@@ -31,7 +31,7 @@ function export_repo_variables() {
 	COOKBOOK_CONDA_ENV="llm"
 	COOKBOOK_DIR=${WORK}/cookbooks
 	GIT_REPO_URL="https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp.git"
-	GIT_BRANCH="jupyterenv"
+	GIT_BRANCH="bert_topic"
 	COOKBOOK_WORKSPACE_DIR=${COOKBOOK_DIR}/${COOKBOOK_NAME}
 	COOKBOOK_REPOSITORY_PARENT_DIR=${COOKBOOK_DIR}/.repository
 	COOKBOOK_REPOSITORY_DIR=${COOKBOOK_REPOSITORY_PARENT_DIR}/${COOKBOOK_NAME}
