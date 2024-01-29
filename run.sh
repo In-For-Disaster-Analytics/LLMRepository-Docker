@@ -138,6 +138,7 @@ function load_tap_functions() {
 }
 
 function create_jupyter_configuration {
+	mkdir -p ${HOME}/.tap
 	TAP_JUPYTER_CONFIG="${HOME}/.tap/jupyter_config.py"
 	JUPYTER_SERVER_APP="ServerApp"
 	JUPYTER_BIN="jupyter-lab"
@@ -170,6 +171,7 @@ function run_jupyter() {
 	JUPYTER_BIN="jupyter-lab"
 	JUPYTER_ARGS="--certfile=$(cat ${TAP_CERTFILE}) --config=${TAP_JUPYTER_CONFIG}"
 	JUPYTER_LOGFILE=${NB_SERVERDIR}/${NODE_HOSTNAME_PREFIX}.log
+	mkdir -p ${NB_SERVERDIR}
 	touch $JUPYTER_LOGFILE
 	nohup ${JUPYTER_BIN} ${JUPYTER_ARGS} &>${JUPYTER_LOGFILE} &
 	JUPYTER_PID=$!
