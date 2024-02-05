@@ -1,6 +1,6 @@
 {
   "id": "jupyter-lab-llama-ls6-dev",
-  "version": "0.0.4",
+  "version": "0.0.4-pre6",
   "description": "Run an interactive Jupyter Lab session on an HPC compute node to use LLama. ",
   "owner": "${apiUserId}",
   "enabled": true,
@@ -28,7 +28,24 @@
     "mpiCmd": null,
     "cmdPrefix": "mkdir $PWD/work $PWD/home $PWD/scratch;",
     "parameterSet": {
-      "appArgs": [],
+      "appArgs": [
+        {
+          "name": "Update conda environment",
+          "description": "If the conda environment is out of date, update it.",
+          "inputMode": "REQUIRED",
+          "arg": "--no-update-conda-env",
+          "notes": {
+            "enum_values": [
+              {
+                "--no-update-conda-env": "No update conda environment"
+              },
+              {
+                "--update-conda-env": "Update conda environment"
+              }
+            ]
+          }
+        }
+      ],
       "containerArgs": [
         {
           "name": "Jupyter Mounts",
