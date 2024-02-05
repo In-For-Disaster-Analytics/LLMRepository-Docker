@@ -1,5 +1,17 @@
 #!/bin/bash
 
+function validate_parameters() {
+	# Validate that the first parameter is a boolean
+	if [ "$1" != "true" ] && [ "$1" != "false" ]; then
+		echo "The first parameter must be a boolean value to recreate the environment"
+		exit 1
+	fi
+	if [ "$#" -ne 1 ]; then
+		echo "Illegal number of parameters"
+		exit 1
+	fi
+}
+
 function install_conda() {
 	echo "Checking if miniconda3 is installed..."
 	if [ ! -d "$WORK/miniconda3" ]; then
@@ -237,14 +249,14 @@ function session_cleanup() {
 	done
 }
 
-function create_fresh_environment(){
-		conda env create -n ${COOKBOOK_CONDA_ENV} -f $COOKBOOK_WORKSPACE_DIR/.binder/environment.yml --force
-		conda activate ${COOKBOOK_CONDA_ENV}
-		pip install --no-cache-dir -r $COOKBOOK_WORKSPACE_DIR/.binder/requirements.txt
-		python -m ipykernel install --user --name "${COOKBOOK_CONDA_ENV}" --display-name "Python (${COOKBOOK_CONDA_ENV})"
+function create_fresh_environment() {
+	conda env create -n ${COOKBOOK_CONDA_ENV} -f $COOKBOOK_WORKSPACE_DIR/.binder/environment.yml --force
+	conda activate ${COOKBOOK_CONDA_ENV}
+	pip install --no-cache-dir -r $COOKBOOK_WORKSPACE_DIR/.binder/requirements.txt
+	python -m ipykernel install --user --name "${COOKBOOK_CONDA_ENV}" --display-name "Python (${COOKBOOK_CONDA_ENV})"
 }
 
-function recreate_environment(){
+function recreate_environment() {
 	conda env remove -n ${COOKBOOK_CONDA_ENV}
 	create_fresh_environment
 }
@@ -253,6 +265,9 @@ function install_dependencies() {
 	### Create env
 	if { conda env list | grep "${COOKBOOK_CONDA_ENV}"; } >/dev/null 2>&1; then
 		conda activate ${COOKBOOK_CONDA_ENV}
+		if [ "$1" = "true" ]; then
+			recreate_environment
+		fi
 	else
 		create_fresh_environment
 	fi
@@ -261,6 +276,8 @@ function install_dependencies() {
 }
 
 set -xe
+
+validate_parameters
 install_conda
 load_cuda
 export_repo_variables
@@ -269,7 +286,7 @@ load_tap_functions
 get_tap_certificate
 get_tap_token
 create_jupyter_configuration
-install_dependencies
+install_dependencies $1
 run_jupyter
 port_fowarding
 send_url_to_webhook

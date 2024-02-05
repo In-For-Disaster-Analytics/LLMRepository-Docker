@@ -37,10 +37,10 @@
           "notes": {
             "enum_values": [
               {
-                "--no-update-conda-env": "No update conda environment"
+                "false": "No update conda environment"
               },
               {
-                "--update-conda-env": "Update conda environment"
+                "true": "Update conda environment"
               }
             ]
           }
