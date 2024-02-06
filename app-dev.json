@@ -1,13 +1,13 @@
 {
   "id": "jupyter-lab-llama-ls6-dev",
-  "version": "0.0.4-pre8",
+  "version": "0.0.4-sha-35b7388",
   "description": "Run an interactive Jupyter Lab session on an HPC compute node to use LLama. ",
   "owner": "${apiUserId}",
   "enabled": true,
   "runtime": "SINGULARITY",
   "runtimeVersion": null,
   "runtimeOptions": ["SINGULARITY_RUN"],
-  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:965d210",
+  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:sha-35b7388",
   "jobType": "BATCH",
   "maxJobs": -1,
   "maxJobsPerUser": -1,
@@ -30,17 +30,17 @@
     "parameterSet": {
       "appArgs": [
         {
-          "name": "Re create conda environment",
-          "description": "Reinstall the environment. If `true`, the system will start with a clean conda environment.",
+          "name": "Recreate conda environment",
+          "description": "If yes, a clean conda environment starts.",
           "inputMode": "REQUIRED",
           "arg": "false",
           "notes": {
             "enum_values": [
               {
-                "false": "Yes, recreate conda environment"
+                "true": "Yes, recreate conda environment"
               },
               {
-                "true": "No, keep current conda environment"
+                "false": "No, keep current conda environment"
               }
             ]
           }

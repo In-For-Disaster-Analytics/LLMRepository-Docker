@@ -277,7 +277,11 @@ function install_dependencies() {
 
 set -xe
 
-validate_parameters
+#Parameters
+conda_recreate_flag=$1
+
+#Execution
+validate_parameters $conda_recreate_flag
 install_conda
 load_cuda
 export_repo_variables
@@ -286,7 +290,7 @@ load_tap_functions
 get_tap_certificate
 get_tap_token
 create_jupyter_configuration
-install_dependencies $1
+install_dependencies $conda_recreate_flag
 run_jupyter
 port_fowarding
 send_url_to_webhook
