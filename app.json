@@ -1,13 +1,13 @@
 {
   "id": "jupyter-lab-llama-ls6",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Run an interactive Jupyter Lab session on an HPC compute node to use LLama.",
   "owner": "${apiUserId}",
   "enabled": true,
   "runtime": "SINGULARITY",
   "runtimeVersion": null,
   "runtimeOptions": ["SINGULARITY_RUN"],
-  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:0.0.4",
+  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:0.0.5",
   "jobType": "BATCH",
   "maxJobs": -1,
   "maxJobsPerUser": -1,
@@ -28,7 +28,69 @@
     "mpiCmd": null,
     "cmdPrefix": "mkdir $PWD/work $PWD/home $PWD/scratch;",
     "parameterSet": {
-      "appArgs": [],
+      "appArgs": [
+        {
+          "name": "Start a fresh installation of the cookbook",
+          "description": "If selected, the system will backup the existing cookbook directory and start a fresh installation using the latest version available. WARNING: The existing cookbook directory will be deleted and stored in a backup directory.",
+          "inputMode": "REQUIRED",
+          "arg": "false",
+          "notes": {
+            "enum_values": [
+              {
+                "true": "Yes, start a fresh installation of the cookbook"
+              },
+              {
+                "false": "No, keep current installation"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Update conda environment",
+          "description": "If selected, the system will update the conda environment using the latest version available. WARNING: The existing conda environment will be deleted and reinstalled. ",
+          "inputMode": "REQUIRED",
+          "arg": "false",
+          "notes": {
+            "enum_values": [
+              {
+                "true": "Yes, update conda environment"
+              },
+              {
+                "false": "No, keep current conda environment"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Git repository url",
+          "description": "The URL of the git repository to clone.",
+          "inputMode": "REQUIRED",
+          "arg": "https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp.git",
+          "notes": {
+            "isHidden": true
+          }
+        },
+        {
+          "name": "Git branch",
+          "description": "The branch of the git repository to clone.",
+          "inputMode": "REQUIRED",
+          "arg": "dev",
+          "notes": {
+            "isHidden": true,
+            "enum_values": [
+              {
+                "jupyterenv": "Jupyter Lab environment"
+              },
+              {
+                "dev": "Development"
+              },
+              {
+                "main": "main"
+              }
+            ]
+          }
+        }
+      ],
       "containerArgs": [
         {
           "name": "Jupyter Mounts",
