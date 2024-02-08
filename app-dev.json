@@ -1,13 +1,13 @@
 {
   "id": "jupyter-lab-llama-ls6-dev",
-  "version": "0.0.5",
+  "version": "0.0.6-b0330c4",
   "description": "Run an interactive Jupyter Lab session on an HPC compute node to use LLama. ",
   "owner": "${apiUserId}",
   "enabled": true,
   "runtime": "SINGULARITY",
   "runtimeVersion": null,
   "runtimeOptions": ["SINGULARITY_RUN"],
-  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:0.0.5",
+  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:sha-b0330c4",
   "jobType": "BATCH",
   "maxJobs": -1,
   "maxJobsPerUser": -1,
@@ -76,7 +76,7 @@
           "inputMode": "REQUIRED",
           "arg": "dev",
           "notes": {
-            "isHidden": true,
+            "isHidden": false,
             "enum_values": [
               {
                 "jupyterenv": "Jupyter Lab environment"
