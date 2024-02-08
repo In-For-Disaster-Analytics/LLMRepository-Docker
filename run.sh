@@ -85,7 +85,6 @@ function clone_cookbook_on_archive() {
 
 function init_directory() {
 	mkdir -p ${COOKBOOK_REPOSITORY_PARENT_DIR}
-	remove_update_available_file
 	clone_cookbook_on_workspace
 }
 
