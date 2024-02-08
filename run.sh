@@ -6,7 +6,7 @@ function validate_parameters() {
 		echo "The first parameter must be a boolean value to recreate the environment"
 		exit 1
 	fi
-	if [ "$#" -ne 1 ]; then
+	if [ "$#" -ne 3 ]; then
 		echo "Illegal number of parameters"
 		exit 1
 	fi
@@ -42,8 +42,6 @@ function export_repo_variables() {
 	COOKBOOK_NAME="sites-and-stories-nlp"
 	COOKBOOK_CONDA_ENV="llm"
 	COOKBOOK_DIR=${WORK}/cookbooks
-	GIT_REPO_URL="https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp.git"
-	GIT_BRANCH="jupyterenv"
 	COOKBOOK_WORKSPACE_DIR=${COOKBOOK_DIR}/${COOKBOOK_NAME}
 	COOKBOOK_REPOSITORY_PARENT_DIR=${COOKBOOK_DIR}/.repository
 	COOKBOOK_REPOSITORY_DIR=${COOKBOOK_REPOSITORY_PARENT_DIR}/${COOKBOOK_NAME}
@@ -53,8 +51,6 @@ function export_repo_variables() {
 	NODE_HOSTNAME_LONG=$(hostname -f)   # Fully Qualified Domain Name  -->  c###-###.stampede2.tacc.utexas.edu
 	export COOKBOOK_NAME
 	export COOKBOOK_DIR
-	export GIT_REPO_URL
-	export GIT_BRANCH
 	export COOKBOOK_WORKSPACE_DIR
 	export COOKBOOK_REPOSITORY_DIR
 	export COOKBOOK_REPOSITORY_PARENT_DIR
@@ -279,6 +275,8 @@ set -xe
 
 #Parameters
 conda_recreate_flag=$1
+export GIT_REPO_URL=$2
+export GIT_BRANCH=$3
 
 #Execution
 validate_parameters $conda_recreate_flag

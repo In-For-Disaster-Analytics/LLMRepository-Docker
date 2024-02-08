@@ -1,13 +1,13 @@
 {
   "id": "jupyter-lab-llama-ls6-dev",
-  "version": "0.0.4-sha-35b7388",
+  "version": "0.0.4-sha-46d7572",
   "description": "Run an interactive Jupyter Lab session on an HPC compute node to use LLama. ",
   "owner": "${apiUserId}",
   "enabled": true,
   "runtime": "SINGULARITY",
   "runtimeVersion": null,
   "runtimeOptions": ["SINGULARITY_RUN"],
-  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:sha-35b7388",
+  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:sha-46d7572",
   "jobType": "BATCH",
   "maxJobs": -1,
   "maxJobsPerUser": -1,
@@ -41,6 +41,34 @@
               },
               {
                 "false": "No, keep current conda environment"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Git repository url",
+          "description": "The URL of the git repository to clone.",
+          "inputMode": "REQUIRED",
+          "arg": "https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp.git",
+          "notes": {
+            "isHidden": true
+          }
+        },
+        {
+          "name": "Git branch",
+          "description": "The branch of the git repository to clone.",
+          "inputMode": "REQUIRED",
+          "arg": "jupyterenv",
+          "notes": {
+            "enum_values": [
+              {
+                "jupyterenv": "Jupyter Lab environment"
+              },
+              {
+                "bert_topic": "bert_topic"
+              },
+              {
+                "main": "main"
               }
             ]
           }
