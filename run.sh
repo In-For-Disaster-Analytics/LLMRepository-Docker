@@ -1,16 +1,17 @@
 #!/bin/bash
 
-function validate_parameters() {
-	# Validate that the first parameter is a boolean
-	if [ "$1" != "true" ] && [ "$1" != "false" ]; then
-		echo "The first parameter must be a boolean value to recreate the environment"
-		exit 1
-	fi
-	if [ "$#" -ne 3 ]; then
-		echo "Illegal number of parameters"
-		exit 1
-	fi
-}
+set -xe
+
+# Validate parameters
+if [ "$1" != "true" ] && [ "$1" != "false" ]; then
+	echo "The first parameter must be a boolean value to recreate the environment"
+	exit 1
+fi
+if [ "$#" -ne 4 ]; then
+	echo "Illegal number of parameters"
+	exit 1
+fi
+
 
 function install_conda() {
 	echo "Checking if miniconda3 is installed..."
@@ -61,31 +62,15 @@ function export_repo_variables() {
 	export COOKBOOK_CONDA_ENV
 }
 
-function remove_update_available_file() {
-	if [ -f "${UPDATE_AVAILABLE_FILE}" ]; then
-		rm "${UPDATE_AVAILABLE_FILE}"
-	fi
-}
-
-function detect_update_available() {
-	git remote update
-	LAST_UPDATE=$(git show --no-notes --format=format:"%H" "${GIT_BRANCH}" | head -n 1)
-	LAST_COMMIT=$(git show --no-notes --format=format:"%H" "origin/${GIT_BRANCH}" | head -n 1)
-	if [ $LAST_COMMIT != $LAST_UPDATE ]; then
-		echo "Update available for ${COOKBOOK_NAME} cookbook" >"${UPDATE_AVAILABLE_FILE}"
-		echo "To update the conda environment. Please run" >>"${UPDATE_AVAILABLE_FILE}"
-		echo "conda env update --file ${COOKBOOK_REPOSITORY_DIR}/.binder/environment.yml --prune " >>"${UPDATE_AVAILABLE_FILE}"
-		echo "pip install --no-cache-dir -r ${COOKBOOK_REPOSITORY_DIR}/.binder/requirements.txt " >>"${UPDATE_AVAILABLE_FILE}"
-	fi
-}
-
 function clone_cookbook_on_workspace() {
+	DATE_FILE_SUFFIX=$(date +%Y%m%d%H%M%S)
 	if [ ! -d "$COOKBOOK_WORKSPACE_DIR" ]; then
 		git clone ${GIT_REPO_URL} --branch ${GIT_BRANCH} ${COOKBOOK_WORKSPACE_DIR}
 	else
-		pushd ${COOKBOOK_WORKSPACE_DIR}
-		detect_update_available
-		popd
+		if [ ${START_FRESH_INSTALLATION} = "true" ]; then
+			mv ${COOKBOOK_WORKSPACE_DIR} ${COOKBOOK_WORKSPACE_DIR}-${DATE_FILE_SUFFIX}
+			git clone ${GIT_REPO_URL} --branch ${GIT_BRANCH} ${COOKBOOK_WORKSPACE_DIR}
+		fi
 	fi
 }
 
@@ -102,7 +87,6 @@ function init_directory() {
 	mkdir -p ${COOKBOOK_REPOSITORY_PARENT_DIR}
 	remove_update_available_file
 	clone_cookbook_on_workspace
-	clone_cookbook_on_archive
 }
 
 function get_tap_certificate() {
@@ -245,41 +229,55 @@ function session_cleanup() {
 	done
 }
 
-function create_fresh_environment() {
+function conda_environment_exists() {
+	conda env list | grep "${COOKBOOK_CONDA_ENV}"
+}
+
+function create_conda_environment() {
 	conda env create -n ${COOKBOOK_CONDA_ENV} -f $COOKBOOK_WORKSPACE_DIR/.binder/environment.yml --force
 	conda activate ${COOKBOOK_CONDA_ENV}
 	pip install --no-cache-dir -r $COOKBOOK_WORKSPACE_DIR/.binder/requirements.txt
 	python -m ipykernel install --user --name "${COOKBOOK_CONDA_ENV}" --display-name "Python (${COOKBOOK_CONDA_ENV})"
 }
 
-function recreate_environment() {
-	conda env remove -n ${COOKBOOK_CONDA_ENV}
-	create_fresh_environment
+function update_conda_enviroment() {
+	conda env update -n ${COOKBOOK_CONDA_ENV} -f $COOKBOOK_REPOSITORY_DIR/.binder/environment.yml --prune
+	pip install --no-cache-dir -r $COOKBOOK_REPOSITORY_DIR/.binder/requirements.txt
 }
+
+function install_base_packages() {
+	conda install -n base -c conda-forge jupyterlab_widgets
+	conda install -n base -c conda-forge ipywidgets
+}
+
+function delete_conda_environment() {
+	conda remove -n ${COOKBOOK_CONDA_ENV} --all
+}
+
 
 function install_dependencies() {
 	### Create env
-	if { conda env list | grep "${COOKBOOK_CONDA_ENV}"; } >/dev/null 2>&1; then
-		conda activate ${COOKBOOK_CONDA_ENV}
-		if [ "$1" = "true" ]; then
-			recreate_environment
+	if { conda_environment_exists; } >/dev/null 2>&1; then
+		if [ ${START_FRESH_INSTALLATION} = "true" ]; then
+			delete_conda_environment
+			create_conda_environment
+		else if [ ${UPDATE_CONDA_ENV} = "true" ]; then
+			update_conda_enviroment
 		fi
 	else
-		create_fresh_environment
+		create_conda_environment
 	fi
-	conda install -n ${COOKBOOK_CONDA_ENV} -c conda-forge jupyterlab_widgets
-	conda install -n ${COOKBOOK_CONDA_ENV} -c conda-forge ipywidgets
+	conda activate ${COOKBOOK_CONDA_ENV}
+	install_base_packages
 }
 
-set -xe
-
 #Parameters
-conda_recreate_flag=$1
-export GIT_REPO_URL=$2
-export GIT_BRANCH=$3
+export START_FRESH_INSTALLATION=$1
+export UPDATE_CONDA_ENV=$2
+export GIT_REPO_URL=$3
+export GIT_BRANCH=$4
 
 #Execution
-validate_parameters $conda_recreate_flag
 install_conda
 load_cuda
 export_repo_variables
@@ -288,7 +286,7 @@ load_tap_functions
 get_tap_certificate
 get_tap_token
 create_jupyter_configuration
-install_dependencies $conda_recreate_flag
+install_dependencies
 run_jupyter
 port_fowarding
 send_url_to_webhook
