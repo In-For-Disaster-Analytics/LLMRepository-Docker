@@ -32,9 +32,9 @@ jobs:
         with:
           tool-cache: false
           # "false" if necessary for your workflow
-          android: true
+          android: false
           dotnet: true
-          haskell: true
+          haskell: false
           large-packages: true
           docker-images: false
           swap-storage: true
