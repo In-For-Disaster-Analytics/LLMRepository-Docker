@@ -1,13 +1,13 @@
 {
   "id": "jupyter-lab-llama-ls6-dev",
-  "version": "0.0.5-sha-e8ce329",
+  "version": "0.0.5",
   "description": "Run an interactive Jupyter Lab session on an HPC compute node to use LLama. ",
   "owner": "${apiUserId}",
   "enabled": true,
   "runtime": "SINGULARITY",
   "runtimeVersion": null,
   "runtimeOptions": ["SINGULARITY_RUN"],
-  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:sha-e8ce329",
+  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:sha-b4792f8",
   "jobType": "BATCH",
   "maxJobs": -1,
   "maxJobsPerUser": -1,
@@ -74,14 +74,15 @@
           "name": "Git branch",
           "description": "The branch of the git repository to clone.",
           "inputMode": "REQUIRED",
-          "arg": "jupyterenv",
+          "arg": "dev",
           "notes": {
+            "isHidden": true,
             "enum_values": [
               {
                 "jupyterenv": "Jupyter Lab environment"
               },
               {
-                "bert_topic": "bert_topic"
+                "dev": "Development"
               },
               {
                 "main": "main"
