@@ -261,7 +261,7 @@ function install_dependencies() {
 		if [ ${START_FRESH_INSTALLATION} = "true" ]; then
 			delete_conda_environment
 			create_conda_environment
-		else if [ ${UPDATE_CONDA_ENV} = "true" ]; then
+		elif [ ${UPDATE_CONDA_ENV} = "true" ]; then
 			update_conda_enviroment
 		fi
 	else
