@@ -252,7 +252,7 @@ function install_base_packages() {
 }
 
 function delete_conda_environment() {
-	conda deactivate ${COOKBOOK_CONDA_ENV}
+	conda deactivate
 	conda remove -n ${COOKBOOK_CONDA_ENV} --all
 }
 
