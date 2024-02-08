@@ -240,16 +240,19 @@ function create_conda_environment() {
 }
 
 function update_conda_enviroment() {
+	conda activate ${COOKBOOK_CONDA_ENV}
 	conda env update -n ${COOKBOOK_CONDA_ENV} -f $COOKBOOK_REPOSITORY_DIR/.binder/environment.yml --prune
 	pip install --no-cache-dir -r $COOKBOOK_REPOSITORY_DIR/.binder/requirements.txt
 }
 
 function install_base_packages() {
+	conda activate ${COOKBOOK_CONDA_ENV}
 	conda install -n base -c conda-forge jupyterlab_widgets
 	conda install -n base -c conda-forge ipywidgets
 }
 
 function delete_conda_environment() {
+	conda activate ${COOKBOOK_CONDA_ENV}
 	conda remove -n ${COOKBOOK_CONDA_ENV} --all
 }
 
@@ -266,7 +269,6 @@ function install_dependencies() {
 	else
 		create_conda_environment
 	fi
-	conda activate ${COOKBOOK_CONDA_ENV}
 	install_base_packages
 }
 
