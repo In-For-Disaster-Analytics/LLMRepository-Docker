@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -xe
-
+start_time=$(date +%s)
 # Validate parameters
 if [ "$1" != "true" ] && [ "$1" != "false" ]; then
 	echo "The first parameter must be a boolean value to recreate the environment"
@@ -270,6 +270,14 @@ function install_dependencies() {
 	fi
 }
 
+function get_elapsed_time() {
+	start_time=$1
+	end_time=$(date +%s)
+	elapsed_time=$(($end_time - $start_time))
+	minutes=$(($elapsed_time / 60))
+	echo "Elapsed time: $minutes minutes"
+}
+
 #Parameters
 export START_FRESH_INSTALLATION=$1
 export UPDATE_CONDA_ENV=$2
@@ -289,4 +297,5 @@ install_dependencies
 run_jupyter
 port_fowarding
 send_url_to_webhook
+get_elapsed_time $start_time
 session_cleanup
