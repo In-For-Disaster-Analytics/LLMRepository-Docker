@@ -1,6 +1,6 @@
 {
   "id": "jupyter-lab-llama-ls6-dev",
-  "version": "0.0.7-43542c1",
+  "version": "0.0.7-7b20cb9",
   "description": "Run an interactive Jupyter Lab session on an HPC compute node to use LLama. ",
   "owner": "${apiUserId}",
   "enabled": true,
@@ -37,7 +37,7 @@
           "notes": {
             "enum_values": [
               {
-                "true": "Update to latest version."
+                "true": "Update to latest version"
               },
               {
                 "false": "Keep current version"
@@ -161,7 +161,7 @@
   "notes": {
     "label": "LLama Index Environment (LoneStar 6) Development",
     "helpUrl": "https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp/tree/jupyterenv",
-    "helpText": "This app is a Jupyter Lab environment that allows you to use LLama to index data on the TACC Cloud Data Archive. It is a work in progress and is not yet fully functional.",
+    "helpText": "This app is a Jupyter Lab environment that allows you to use LLama to index data on the TACC Cloud Data Archive. It is a work in progress and is not yet fully functional. <br> Initial Run Duration: Please note that if you are running this cookbook for the first time, it may take up to 10 minutes to complete. Thank you for your patience.",
     "hideNodeCountAndCoresPerNode": true,
     "isInteractive": true,
     "icon": "jupyter",
