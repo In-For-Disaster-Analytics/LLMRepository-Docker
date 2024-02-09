@@ -1,13 +1,13 @@
 {
   "id": "jupyter-lab-llama-ls6-dev",
-  "version": "0.0.6",
+  "version": "0.0.7-43542c1",
   "description": "Run an interactive Jupyter Lab session on an HPC compute node to use LLama. ",
   "owner": "${apiUserId}",
   "enabled": true,
   "runtime": "SINGULARITY",
   "runtimeVersion": null,
   "runtimeOptions": ["SINGULARITY_RUN"],
-  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:0.0.6",
+  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:sha-43542c1",
   "jobType": "BATCH",
   "maxJobs": -1,
   "maxJobsPerUser": -1,
@@ -30,33 +30,33 @@
     "parameterSet": {
       "appArgs": [
         {
-          "name": "Download latest version of the cookbook",
-          "description": "If selected, the system will secure a backup of the existing cookbook directory and subsequently download the latest available version. WARNING: This option doesn't update the conda environment. If you want to update the conda environment, please select the option below.",
+          "name": "Update cookbook",
+          "description": "Control whether the system will update the existing cookbook with the latest version available. This option is irrelevant if you are running the cookbook for the first time.",
           "inputMode": "REQUIRED",
           "arg": "false",
           "notes": {
             "enum_values": [
               {
-                "true": "Download latest version of the cookbook"
+                "true": "Update to latest version."
               },
               {
-                "false": "Don't download latest version of the cookbook"
+                "false": "Keep current version"
               }
             ]
           }
         },
         {
           "name": "Update conda environment",
-          "description": "If selected, the system will update the conda environment using the latest version available.",
+          "description": "Control whether the system will update the existing conda environment with the latest version available. This option is irrelevant if you are running the cookbook for the first time.",
           "inputMode": "REQUIRED",
           "arg": "false",
           "notes": {
             "enum_values": [
               {
-                "true": "Update conda environment"
+                "true": "Update to latest version."
               },
               {
-                "false": "Don't update conda environment"
+                "false": "Keep current version"
               }
             ]
           }
