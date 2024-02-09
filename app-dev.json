@@ -30,33 +30,33 @@
     "parameterSet": {
       "appArgs": [
         {
-          "name": "Start a fresh installation of the cookbook",
-          "description": "If selected, the system will backup the existing cookbook directory and start a fresh installation using the latest version available. WARNING: The existing cookbook directory will be deleted and stored in a backup directory.",
+          "name": "Download latest version of the cookbook",
+          "description": "If selected, the system will secure a backup of the existing cookbook directory and subsequently download the latest available version. WARNING: This option doesn't update the conda environment. If you want to update the conda environment, please select the option below.",
           "inputMode": "REQUIRED",
           "arg": "false",
           "notes": {
             "enum_values": [
               {
-                "true": "Yes, start a fresh installation of the cookbook"
+                "true": "Download latest version of the cookbook"
               },
               {
-                "false": "No, keep current installation"
+                "false": "Don't download latest version of the cookbook"
               }
             ]
           }
         },
         {
           "name": "Update conda environment",
-          "description": "If selected, the system will update the conda environment using the latest version available. WARNING: The existing conda environment will be deleted and reinstalled. ",
+          "description": "If selected, the system will update the conda environment using the latest version available.",
           "inputMode": "REQUIRED",
           "arg": "false",
           "notes": {
             "enum_values": [
               {
-                "true": "Yes, update conda environment"
+                "true": "Update conda environment"
               },
               {
-                "false": "No, keep current conda environment"
+                "false": "Don't update conda environment"
               }
             ]
           }

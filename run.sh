@@ -12,7 +12,6 @@ if [ "$#" -ne 4 ]; then
 	exit 1
 fi
 
-
 function install_conda() {
 	echo "Checking if miniconda3 is installed..."
 	if [ ! -d "$WORK/miniconda3" ]; then
@@ -67,7 +66,7 @@ function clone_cookbook_on_workspace() {
 	if [ ! -d "$COOKBOOK_WORKSPACE_DIR" ]; then
 		git clone ${GIT_REPO_URL} --branch ${GIT_BRANCH} ${COOKBOOK_WORKSPACE_DIR}
 	else
-		if [ ${START_FRESH_INSTALLATION} = "true" ]; then
+		if [ ${DOWNLOAD_LATEST_VERSION} = "true" ]; then
 			mv ${COOKBOOK_WORKSPACE_DIR} ${COOKBOOK_WORKSPACE_DIR}-${DATE_FILE_SUFFIX}
 			git clone ${GIT_REPO_URL} --branch ${GIT_BRANCH} ${COOKBOOK_WORKSPACE_DIR}
 		fi
@@ -255,18 +254,18 @@ function delete_conda_environment() {
 	conda env remove -n ${COOKBOOK_CONDA_ENV}
 }
 
-
-function install_dependencies() {
-	### Create env
-	if { conda_environment_exists; } >/dev/null 2>&1; then
-		if [ ${START_FRESH_INSTALLATION} = "true" ]; then
+function handle_installation() {
+	if [ ${UPDATE_CONDA_ENV} = "true" ]; then
+		if { conda_environment_exists; } >/dev/null 2>&1; then
 			delete_conda_environment
-			create_conda_environment
-		elif [ ${UPDATE_CONDA_ENV} = "true" ]; then
-			update_conda_enviroment
 		fi
-	else
 		create_conda_environment
+	else
+		if { conda_environment_exists; } >/dev/null 2>&1; then
+			install_base_packages
+		else
+			create_conda_environment
+		fi
 	fi
 }
 
@@ -279,7 +278,7 @@ function get_elapsed_time() {
 }
 
 #Parameters
-export START_FRESH_INSTALLATION=$1
+export DOWNLOAD_LATEST_VERSION=$1
 export UPDATE_CONDA_ENV=$2
 export GIT_REPO_URL=$3
 export GIT_BRANCH=$4
@@ -293,7 +292,7 @@ load_tap_functions
 get_tap_certificate
 get_tap_token
 create_jupyter_configuration
-install_dependencies
+handle_installation
 run_jupyter
 port_fowarding
 send_url_to_webhook
