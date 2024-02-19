@@ -277,6 +277,13 @@ function get_elapsed_time() {
 	echo "Elapsed time: $minutes minutes"
 }
 
+function start_ollama(){
+	wget "https://github.com/ollama/ollama/releases/download/v0.1.20/ollama-linux-amd64"
+	chmod 755 ollama-linux-amd64
+	mv ollama-linux-amd64 $SCRATCH/ollama
+	nohup OLLAMA_HOST=0.0.0.0 $SCRATCH/ollama serve
+}
+
 #Parameters
 export DOWNLOAD_LATEST_VERSION=$1
 export UPDATE_CONDA_ENV=$2
@@ -295,6 +302,7 @@ create_jupyter_configuration
 handle_installation
 run_jupyter
 port_fowarding
+start_ollama
 send_url_to_webhook
 get_elapsed_time $start_time
 session_cleanup
