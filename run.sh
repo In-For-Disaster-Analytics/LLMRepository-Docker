@@ -281,7 +281,7 @@ function start_ollama(){
 	wget "https://github.com/ollama/ollama/releases/download/v0.1.20/ollama-linux-amd64"
 	chmod 755 ollama-linux-amd64
 	mv ollama-linux-amd64 $SCRATCH/ollama
-	nohup $SCRATCH/ollama serve
+	nohup $SCRATCH/ollama serve &
 }
 
 #Parameters
