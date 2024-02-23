@@ -1,4 +1,5 @@
 {
+
   "id": "jupyter-lab-llama-ls6-dev",
   "version": "0.0.4",
   "description": "Run an interactive Jupyter Lab session on an HPC compute node to use LLama. ",
@@ -28,7 +29,69 @@
     "mpiCmd": null,
     "cmdPrefix": "mkdir $PWD/work $PWD/home $PWD/scratch;",
     "parameterSet": {
-      "appArgs": [],
+      "appArgs": [
+        {
+          "name": "Update cookbook",
+          "description": "Control whether the system will update the existing cookbook with the latest version available. This option is irrelevant if you are running the cookbook for the first time.",
+          "inputMode": "REQUIRED",
+          "arg": "false",
+          "notes": {
+            "enum_values": [
+              {
+                "true": "Update to latest version"
+              },
+              {
+                "false": "Keep current version"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Update conda environment",
+          "description": "Control whether the system will update the existing conda environment with the latest version available. This option is irrelevant if you are running the cookbook for the first time.",
+          "inputMode": "REQUIRED",
+          "arg": "false",
+          "notes": {
+            "enum_values": [
+              {
+                "true": "Update to latest version."
+              },
+              {
+                "false": "Keep current version"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Git repository url",
+          "description": "The URL of the git repository to clone.",
+          "inputMode": "REQUIRED",
+          "arg": "https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp.git",
+          "notes": {
+            "isHidden": true
+          }
+        },
+        {
+          "name": "Git branch",
+          "description": "The branch of the git repository to clone.",
+          "inputMode": "REQUIRED",
+          "arg": "dev",
+          "notes": {
+            "isHidden": true,
+            "enum_values": [
+              {
+                "jupyterenv": "Jupyter Lab environment"
+              },
+              {
+                "dev": "Development"
+              },
+              {
+                "main": "main"
+              }
+            ]
+          }
+        }
+      ],
       "containerArgs": [
         {
           "name": "Jupyter Mounts",
@@ -97,13 +160,13 @@
   },
   "tags": ["portalName: ALL"],
   "notes": {
-    "label": "LLama Index Environment (LoneStar 6) Development",
+    "label": "LLama Index Environment (LoneStar 6)",
     "helpUrl": "https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp/tree/jupyterenv",
     "helpText": "This app is a Jupyter Lab environment that allows you to use LLama to index data on the TACC Cloud Data Archive. It is a work in progress and is not yet fully functional.",
     "hideNodeCountAndCoresPerNode": true,
     "isInteractive": true,
     "icon": "jupyter",
     "category": "Data Processing",
-    "queueFilter": ["gpu-a100", "gpu-a100-dev", "development"]
+    "queueFilter": ["gpu-a100-small","gpu-a100", "gpu-a100-dev" ]
   }
 }

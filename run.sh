@@ -252,7 +252,19 @@ function install_dependencies() {
 
 }
 
-set -xe
+function start_ollama(){
+	wget "https://github.com/ollama/ollama/releases/download/v0.1.20/ollama-linux-amd64"
+	chmod 755 ollama-linux-amd64
+	mv ollama-linux-amd64 $SCRATCH/ollama
+	nohup $SCRATCH/ollama serve &
+}
+
+#Parameters
+export DOWNLOAD_LATEST_VERSION=$1
+export UPDATE_CONDA_ENV=$2
+export GIT_REPO_URL=$3
+export GIT_BRANCH=$4
+
 
 install_conda
 load_cuda
@@ -265,6 +277,7 @@ create_jupyter_configuration
 install_dependencies
 run_jupyter
 port_fowarding
+start_ollama
 send_url_to_webhook
 session_cleanup
 
