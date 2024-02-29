@@ -1,4 +1,4 @@
-FROM nvidia/cuda:12.3.0-devel-ubuntu22.04
+FROM nvidia/cuda:12.3.0-runtime-ubuntu22.04
 
 LABEL maintainer="TACC-ACI-WMA <wma_prtl@tacc.utexas.edu>"
 
@@ -32,8 +32,7 @@ RUN pip install --upgrade --no-cache-dir \
     wheel
 
 # Install jupyterlab and ML packages using host cache
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install \
+RUN pip install  --no-cache-dir\
     jupyterlab \
     tensorflow[and-cuda] \
     torch
