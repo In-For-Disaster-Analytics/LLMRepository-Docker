@@ -32,8 +32,7 @@ RUN pip install --upgrade --no-cache-dir \
     wheel
 
 # Install jupyterlab and ML packages using host cache
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install \
+RUN pip install  --no-cache-dir\
     jupyterlab \
     tensorflow[and-cuda] \
     torch
