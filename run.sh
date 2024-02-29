@@ -259,13 +259,17 @@ function start_ollama(){
 	nohup $SCRATCH/ollama serve &
 }
 
+function download_spacy_english_model(){
+	python -m spacy download en_core_web_sm
+}
+
 #Parameters
 export DOWNLOAD_LATEST_VERSION=$1
 export UPDATE_CONDA_ENV=$2
 export GIT_REPO_URL=$3
 export GIT_BRANCH=$4
 
-
+# Run functions in logical order
 install_conda
 load_cuda
 export_repo_variables
@@ -278,6 +282,9 @@ install_dependencies
 run_jupyter
 port_fowarding
 start_ollama
+download_spacy_english_model
+
+# These have to stay as last two functions
 send_url_to_webhook
 session_cleanup
 
