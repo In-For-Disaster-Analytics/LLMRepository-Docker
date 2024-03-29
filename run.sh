@@ -247,7 +247,7 @@ function install_dependencies() {
 		pip install --no-cache-dir -r $COOKBOOK_WORKSPACE_DIR/.binder/requirements.txt
 		python -m ipykernel install --user --name "${COOKBOOK_CONDA_ENV}" --display-name "Python (${COOKBOOK_CONDA_ENV})"
 	fi
-	conda install -n ${COOKBOOK_CONDA_ENV} -c conda-forge jupyterlab_widgets
+	conda install -n base -c conda-forge jupyterlab_widgets
 	conda install -n ${COOKBOOK_CONDA_ENV} -c conda-forge ipywidgets
 
 }
