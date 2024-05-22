@@ -1,13 +1,13 @@
 {
   "id": "jupyter-lab-llama-ls6-dev",
-  "version": "0.0.13-dev",
-  "description": "Run an interactive Jupyter Lab session on an HPC compute node to use LLama. ",
+  "version": "0.1.0-pre1",
+  "description": "Run an interactive Jupyter Lab session on an HPC compute node to use LLama. <h3> Notice for First-Time Cookbook Users </h3> <ul> <li><b> Parameters:</b></li>The update cookbook and update conda enviroment parameters are not applicable on your first run. These options are designed for enhancing subsequent uses. <li><b>Initial Setup Time:</b></li> Please be prepared for the initial run to take approximately 10 minutes. </ul>",
   "owner": "${apiUserId}",
   "enabled": true,
   "runtime": "SINGULARITY",
   "runtimeVersion": null,
   "runtimeOptions": ["SINGULARITY_RUN"],
-  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:sha-faa06ba",
+  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:0.0.7",
   "jobType": "BATCH",
   "maxJobs": -1,
   "maxJobsPerUser": -1,
@@ -159,13 +159,13 @@
   },
   "tags": ["portalName: ALL"],
   "notes": {
-    "label": "LLama Index Environment (LoneStar 6)",
+    "label": "LLama Index Environment (LoneStar 6) Development",
     "helpUrl": "https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp/tree/jupyterenv",
-    "helpText": "This app is a Jupyter Lab environment that allows you to use LLama to index data on the TACC Cloud Data Archive. It is a work in progress and is not yet fully functional.",
+    "html": "This app is a Jupyter Lab environment that allows you to use LLama to index data on the TACC Cloud Data Archive. It is a work in progress and is not yet fully functional.",
     "hideNodeCountAndCoresPerNode": true,
     "isInteractive": true,
     "icon": "jupyter",
     "category": "Data Processing",
-    "queueFilter": ["gpu-a100-small", "gpu-a100", "gpu-a100-dev"]
+    "queueFilter": ["gpu-a100", "gpu-a100-dev", "development"]
   }
 }
