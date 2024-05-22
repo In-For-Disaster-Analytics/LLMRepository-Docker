@@ -266,10 +266,11 @@ export GIT_BRANCH=$4
 
 if [ -z "${GIT_REPO_URL}" ]; then
 	export GIT_REPO_URL="https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp.git"
+fi
 
 if [ -z "${GIT_BRANCH}" ]; then
 	export GIT_BRANCH="dev"
-
+fi
 
 install_conda
 load_cuda
