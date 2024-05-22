@@ -1,13 +1,13 @@
 {
   "id": "jupyter-lab-llama-ls6",
-  "version": "0.0.9",
-  "description": "Run an interactive Jupyter Lab session on an HPC compute node to use LLama.",
+  "version": "0.0.7",
+  "description": "Run an interactive Jupyter Lab session on an HPC compute node to use LLama. <h3> Notice for First-Time Cookbook Users </h3> <ul> <li><b> Parameters:</b></li>The update cookbook and update conda enviroment parameters are not applicable on your first run. These options are designed for enhancing subsequent uses. <li><b>Initial Setup Time:</b></li> Please be prepared for the initial run to take approximately 10 minutes. </ul>",
   "owner": "${apiUserId}",
   "enabled": true,
   "runtime": "SINGULARITY",
   "runtimeVersion": null,
   "runtimeOptions": ["SINGULARITY_RUN"],
-  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:0.0.9",
+  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:0.0.7",
   "jobType": "BATCH",
   "maxJobs": -1,
   "maxJobsPerUser": -1,
@@ -28,7 +28,69 @@
     "mpiCmd": null,
     "cmdPrefix": "mkdir $PWD/work $PWD/home $PWD/scratch;",
     "parameterSet": {
-      "appArgs": [],
+      "appArgs": [
+        {
+          "name": "Update cookbook",
+          "description": "Control whether the system will update the existing cookbook with the latest version available. This option is irrelevant if you are running the cookbook for the first time.",
+          "inputMode": "REQUIRED",
+          "arg": "false",
+          "notes": {
+            "enum_values": [
+              {
+                "true": "Update to latest version"
+              },
+              {
+                "false": "Keep current version"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Update conda environment",
+          "description": "Control whether the system will update the existing conda environment with the latest version available. This option is irrelevant if you are running the cookbook for the first time.",
+          "inputMode": "REQUIRED",
+          "arg": "false",
+          "notes": {
+            "enum_values": [
+              {
+                "true": "Update to latest version."
+              },
+              {
+                "false": "Keep current version"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Git repository url",
+          "description": "The URL of the git repository to clone.",
+          "inputMode": "REQUIRED",
+          "arg": "https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp.git",
+          "notes": {
+            "isHidden": true
+          }
+        },
+        {
+          "name": "Git branch",
+          "description": "The branch of the git repository to clone.",
+          "inputMode": "REQUIRED",
+          "arg": "dev",
+          "notes": {
+            "isHidden": true,
+            "enum_values": [
+              {
+                "jupyterenv": "Jupyter Lab environment"
+              },
+              {
+                "dev": "Development"
+              },
+              {
+                "main": "main"
+              }
+            ]
+          }
+        }
+      ],
       "containerArgs": [
         {
           "name": "Jupyter Mounts",
