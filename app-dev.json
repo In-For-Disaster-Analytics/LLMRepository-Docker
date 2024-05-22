@@ -1,6 +1,6 @@
 {
   "id": "jupyter-lab-llama-ls6-dev",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Run an interactive Jupyter Lab session on an HPC compute node to use LLama. ",
   "owner": "${apiUserId}",
   "enabled": true,
@@ -76,7 +76,7 @@
           "inputMode": "REQUIRED",
           "arg": "dev",
           "notes": {
-            "isHidden": true,
+            "isHidden": false,
             "enum_values": [
               {
                 "jupyterenv": "Jupyter Lab environment"

@@ -30,8 +30,7 @@ function export_repo_variables() {
 	COOKBOOK_NAME="sites-and-stories-nlp"
 	COOKBOOK_CONDA_ENV="llm"
 	COOKBOOK_DIR=${WORK}/cookbooks
-	GIT_REPO_URL="https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp.git"
-	GIT_BRANCH="jupyterenv"
+
 	COOKBOOK_WORKSPACE_DIR=${COOKBOOK_DIR}/${COOKBOOK_NAME}
 	COOKBOOK_REPOSITORY_PARENT_DIR=${COOKBOOK_DIR}/.repository
 	COOKBOOK_REPOSITORY_DIR=${COOKBOOK_REPOSITORY_PARENT_DIR}/${COOKBOOK_NAME}
@@ -264,6 +263,12 @@ export DOWNLOAD_LATEST_VERSION=$1
 export UPDATE_CONDA_ENV=$2
 export GIT_REPO_URL=$3
 export GIT_BRANCH=$4
+
+if [ -z "${GIT_REPO_URL}" ]; then
+	export GIT_REPO_URL="https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp.git"
+
+if [ -z "${GIT_BRANCH}" ]; then
+	export GIT_BRANCH="dev"
 
 
 install_conda
