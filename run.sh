@@ -1,5 +1,17 @@
 #!/bin/bash
 
+set -xe
+start_time=$(date +%s)
+# Validate parameters
+if [ "$1" != "true" ] && [ "$1" != "false" ]; then
+	echo "The first parameter must be a boolean value to recreate the environment"
+	exit 1
+fi
+if [ "$#" -ne 4 ]; then
+	echo "Illegal number of parameters"
+	exit 1
+fi
+
 function install_conda() {
 	echo "Checking if miniconda3 is installed..."
 	if [ ! -d "$WORK/miniconda3" ]; then
@@ -30,8 +42,6 @@ function export_repo_variables() {
 	COOKBOOK_NAME="sites-and-stories-nlp"
 	COOKBOOK_CONDA_ENV="llm"
 	COOKBOOK_DIR=${WORK}/cookbooks
-	GIT_REPO_URL="https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp.git"
-	GIT_BRANCH="jupyterenv"
 	COOKBOOK_WORKSPACE_DIR=${COOKBOOK_DIR}/${COOKBOOK_NAME}
 	COOKBOOK_REPOSITORY_PARENT_DIR=${COOKBOOK_DIR}/.repository
 	COOKBOOK_REPOSITORY_DIR=${COOKBOOK_REPOSITORY_PARENT_DIR}/${COOKBOOK_NAME}
@@ -41,8 +51,6 @@ function export_repo_variables() {
 	NODE_HOSTNAME_LONG=$(hostname -f)   # Fully Qualified Domain Name  -->  c###-###.stampede2.tacc.utexas.edu
 	export COOKBOOK_NAME
 	export COOKBOOK_DIR
-	export GIT_REPO_URL
-	export GIT_BRANCH
 	export COOKBOOK_WORKSPACE_DIR
 	export COOKBOOK_REPOSITORY_DIR
 	export COOKBOOK_REPOSITORY_PARENT_DIR
@@ -53,31 +61,15 @@ function export_repo_variables() {
 	export COOKBOOK_CONDA_ENV
 }
 
-function remove_update_available_file() {
-	if [ -f "${UPDATE_AVAILABLE_FILE}" ]; then
-		rm "${UPDATE_AVAILABLE_FILE}"
-	fi
-}
-
-function detect_update_available() {
-	git remote update
-	LAST_UPDATE=$(git show --no-notes --format=format:"%H" "${GIT_BRANCH}" | head -n 1)
-	LAST_COMMIT=$(git show --no-notes --format=format:"%H" "origin/${GIT_BRANCH}" | head -n 1)
-	if [ $LAST_COMMIT != $LAST_UPDATE ]; then
-		echo "Update available for ${COOKBOOK_NAME} cookbook" >"${UPDATE_AVAILABLE_FILE}"
-		echo "To update the conda environment. Please run" >>"${UPDATE_AVAILABLE_FILE}"
-		echo "conda env update --file ${COOKBOOK_REPOSITORY_DIR}/.binder/environment.yml --prune " >>"${UPDATE_AVAILABLE_FILE}"
-		echo "pip install --no-cache-dir -r ${COOKBOOK_REPOSITORY_DIR}/.binder/requirements.txt " >>"${UPDATE_AVAILABLE_FILE}"
-	fi
-}
-
 function clone_cookbook_on_workspace() {
+	DATE_FILE_SUFFIX=$(date +%Y%m%d%H%M%S)
 	if [ ! -d "$COOKBOOK_WORKSPACE_DIR" ]; then
 		git clone ${GIT_REPO_URL} --branch ${GIT_BRANCH} ${COOKBOOK_WORKSPACE_DIR}
 	else
-		pushd ${COOKBOOK_WORKSPACE_DIR}
-		detect_update_available
-		popd
+		if [ ${DOWNLOAD_LATEST_VERSION} = "true" ]; then
+			mv ${COOKBOOK_WORKSPACE_DIR} ${COOKBOOK_WORKSPACE_DIR}-${DATE_FILE_SUFFIX}
+			git clone ${GIT_REPO_URL} --branch ${GIT_BRANCH} ${COOKBOOK_WORKSPACE_DIR}
+		fi
 	fi
 }
 
@@ -92,9 +84,7 @@ function clone_cookbook_on_archive() {
 
 function init_directory() {
 	mkdir -p ${COOKBOOK_REPOSITORY_PARENT_DIR}
-	remove_update_available_file
 	clone_cookbook_on_workspace
-	clone_cookbook_on_archive
 }
 
 function get_tap_certificate() {
@@ -237,19 +227,46 @@ function session_cleanup() {
 	done
 }
 
-function install_dependencies() {
-	### Create env
-	if { conda env list | grep "${COOKBOOK_CONDA_ENV}"; } >/dev/null 2>&1; then
-		conda activate ${COOKBOOK_CONDA_ENV}
-	else
-		conda env create -n ${COOKBOOK_CONDA_ENV} -f $COOKBOOK_WORKSPACE_DIR/.binder/environment.yml --force
-		conda activate ${COOKBOOK_CONDA_ENV}
-		pip install --no-cache-dir -r $COOKBOOK_WORKSPACE_DIR/.binder/requirements.txt
-		python -m ipykernel install --user --name "${COOKBOOK_CONDA_ENV}" --display-name "Python (${COOKBOOK_CONDA_ENV})"
-	fi
-	conda install -n base -c conda-forge jupyterlab_widgets
-	conda install -n ${COOKBOOK_CONDA_ENV} -c conda-forge ipywidgets
+function conda_environment_exists() {
+	conda env list | grep "${COOKBOOK_CONDA_ENV}"
+}
 
+function create_conda_environment() {
+	conda env create -n ${COOKBOOK_CONDA_ENV} -f $COOKBOOK_WORKSPACE_DIR/.binder/environment.yml --force
+	conda activate ${COOKBOOK_CONDA_ENV}
+	pip install --no-cache-dir -r $COOKBOOK_WORKSPACE_DIR/.binder/requirements.txt
+	python -m ipykernel install --user --name "${COOKBOOK_CONDA_ENV}" --display-name "Python (${COOKBOOK_CONDA_ENV})"
+	install_base_packages
+}
+
+function update_conda_enviroment() {
+	conda activate ${COOKBOOK_CONDA_ENV}
+	conda env update -n ${COOKBOOK_CONDA_ENV} -f $COOKBOOK_REPOSITORY_DIR/.binder/environment.yml --prune
+	pip install --no-cache-dir -r $COOKBOOK_REPOSITORY_DIR/.binder/requirements.txt
+}
+
+function install_base_packages() {
+	conda install -n base -c conda-forge jupyterlab_widgets ipywidgets
+}
+
+function delete_conda_environment() {
+	conda deactivate
+	conda env remove -n ${COOKBOOK_CONDA_ENV}
+}
+
+function handle_installation() {
+	if [ ${UPDATE_CONDA_ENV} = "true" ]; then
+		if { conda_environment_exists; } >/dev/null 2>&1; then
+			delete_conda_environment
+		fi
+		create_conda_environment
+	else
+		if { conda_environment_exists; } >/dev/null 2>&1; then
+			install_base_packages
+		else
+			create_conda_environment
+		fi
+	fi
 }
 
 function start_ollama(){
@@ -259,13 +276,22 @@ function start_ollama(){
 	nohup $SCRATCH/ollama serve &
 }
 
+
+function get_elapsed_time() {
+	start_time=$1
+	end_time=$(date +%s)
+	elapsed_time=$(($end_time - $start_time))
+	minutes=$(($elapsed_time / 60))
+	echo "Elapsed time: $minutes minutes"
+}
+
 #Parameters
 export DOWNLOAD_LATEST_VERSION=$1
 export UPDATE_CONDA_ENV=$2
 export GIT_REPO_URL=$3
 export GIT_BRANCH=$4
 
-
+#Execution
 install_conda
 load_cuda
 export_repo_variables
@@ -274,10 +300,10 @@ load_tap_functions
 get_tap_certificate
 get_tap_token
 create_jupyter_configuration
-install_dependencies
+handle_installation
 run_jupyter
 port_fowarding
 start_ollama
 send_url_to_webhook
+get_elapsed_time $start_time
 session_cleanup
-
