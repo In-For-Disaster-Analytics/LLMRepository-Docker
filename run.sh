@@ -269,6 +269,14 @@ function handle_installation() {
 	fi
 }
 
+function start_ollama(){
+	wget "https://github.com/ollama/ollama/releases/download/v0.1.20/ollama-linux-amd64"
+	chmod 755 ollama-linux-amd64
+	mv ollama-linux-amd64 $SCRATCH/ollama
+	nohup $SCRATCH/ollama serve &
+}
+
+
 function get_elapsed_time() {
 	start_time=$1
 	end_time=$(date +%s)
@@ -295,6 +303,7 @@ create_jupyter_configuration
 handle_installation
 run_jupyter
 port_fowarding
+start_ollama
 send_url_to_webhook
 get_elapsed_time $start_time
 session_cleanup
