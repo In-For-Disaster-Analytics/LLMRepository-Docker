@@ -261,9 +261,11 @@ function handle_installation() {
 }
 
 function start_ollama(){
-	wget "https://github.com/ollama/ollama/releases/download/v0.1.20/ollama-linux-amd64"
-	chmod 755 ollama-linux-amd64
-	mv ollama-linux-amd64 $SCRATCH/ollama
+	if [ ! -f $SCRATCH/ollama ]; then
+		wget "https://github.com/ollama/ollama/releases/download/v0.1.20/ollama-linux-amd64"
+		chmod 755 ollama-linux-amd64
+		mv ollama-linux-amd64 $SCRATCH/ollama
+	fi
 	nohup $SCRATCH/ollama serve &
 }
 
