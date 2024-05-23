@@ -155,7 +155,7 @@ function create_jupyter_configuration {
 
 }
 
-function run_jupyter() {
+function () {
 	NB_SERVERDIR=$HOME/.jupyter
 	JUPYTER_SERVER_APP="ServerApp"
 	JUPYTER_BIN="jupyter-lab"
@@ -234,14 +234,9 @@ function conda_environment_exists() {
 function create_conda_environment() {
 	conda env create -n ${COOKBOOK_CONDA_ENV} -f $COOKBOOK_WORKSPACE_DIR/.binder/environment.yml --force
 	conda activate ${COOKBOOK_CONDA_ENV}
+	conda install jupyterlab ipykernel -y
 	pip install --no-cache-dir -r $COOKBOOK_WORKSPACE_DIR/.binder/requirements.txt
 	python -m ipykernel install --user --name "${COOKBOOK_CONDA_ENV}" --display-name "Python (${COOKBOOK_CONDA_ENV})"
-}
-
-function update_conda_enviroment() {
-	conda activate ${COOKBOOK_CONDA_ENV}
-	conda env update -n ${COOKBOOK_CONDA_ENV} -f $COOKBOOK_REPOSITORY_DIR/.binder/environment.yml --prune
-	pip install --no-cache-dir -r $COOKBOOK_REPOSITORY_DIR/.binder/requirements.txt
 }
 
 function delete_conda_environment() {
@@ -296,9 +291,8 @@ get_tap_certificate
 get_tap_token
 create_jupyter_configuration
 handle_installation
-run_jupyter
 port_fowarding
-#start_ollama
+start_ollama
 send_url_to_webhook
 get_elapsed_time $start_time
 session_cleanup
