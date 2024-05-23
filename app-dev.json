@@ -1,6 +1,6 @@
 {
   "id": "jupyter-lab-llama-ls6-dev",
-  "version": "0.1.0",
+  "version": "0.1.1-pre1",
   "description": "Run an interactive Jupyter Lab session on an HPC compute node to use LLama. <h3> Notice for First-Time Cookbook Users </h3> <ul> <li><b> Parameters:</b></li>The update cookbook and update conda enviroment parameters are not applicable on your first run. These options are designed for enhancing subsequent uses. <li><b>Initial Setup Time:</b></li> Please be prepared for the initial run to take approximately 10 minutes. </ul>",
   "owner": "${apiUserId}",
   "enabled": true,
@@ -67,7 +67,7 @@
           "inputMode": "REQUIRED",
           "arg": "https://github.com/In-For-Disaster-Analytics/sites-and-stories-nlp.git",
           "notes": {
-            "isHidden": true
+            "isHidden": false
           }
         },
         {

@@ -236,17 +236,12 @@ function create_conda_environment() {
 	conda activate ${COOKBOOK_CONDA_ENV}
 	pip install --no-cache-dir -r $COOKBOOK_WORKSPACE_DIR/.binder/requirements.txt
 	python -m ipykernel install --user --name "${COOKBOOK_CONDA_ENV}" --display-name "Python (${COOKBOOK_CONDA_ENV})"
-	install_base_packages
 }
 
 function update_conda_enviroment() {
 	conda activate ${COOKBOOK_CONDA_ENV}
 	conda env update -n ${COOKBOOK_CONDA_ENV} -f $COOKBOOK_REPOSITORY_DIR/.binder/environment.yml --prune
 	pip install --no-cache-dir -r $COOKBOOK_REPOSITORY_DIR/.binder/requirements.txt
-}
-
-function install_base_packages() {
-	conda install -n base -c conda-forge jupyterlab_widgets ipywidgets
 }
 
 function delete_conda_environment() {
@@ -262,7 +257,7 @@ function handle_installation() {
 		create_conda_environment
 	else
 		if { conda_environment_exists; } >/dev/null 2>&1; then
-			install_base_packages
+			echo "Conda environment already exists"
 		else
 			create_conda_environment
 		fi
