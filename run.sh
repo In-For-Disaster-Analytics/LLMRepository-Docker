@@ -234,7 +234,7 @@ function conda_environment_exists() {
 function create_conda_environment() {
 	conda env create -n ${COOKBOOK_CONDA_ENV} -f $COOKBOOK_WORKSPACE_DIR/.binder/environment.yml --force
 	conda activate ${COOKBOOK_CONDA_ENV}
-	conda install jupyterlab ipykernel -y
+	pip install jupyterlab ipykernel -y
 	pip install --no-cache-dir -r $COOKBOOK_WORKSPACE_DIR/.binder/requirements.txt
 	python -m ipykernel install --user --name "${COOKBOOK_CONDA_ENV}" --display-name "Python (${COOKBOOK_CONDA_ENV})"
 }
