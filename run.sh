@@ -155,7 +155,7 @@ function create_jupyter_configuration {
 
 }
 
-function () {
+function run_jupyter() {
 	NB_SERVERDIR=$HOME/.jupyter
 	JUPYTER_SERVER_APP="ServerApp"
 	JUPYTER_BIN="jupyter-lab"
