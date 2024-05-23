@@ -298,7 +298,7 @@ create_jupyter_configuration
 handle_installation
 run_jupyter
 port_fowarding
-start_ollama
+#start_ollama
 send_url_to_webhook
 get_elapsed_time $start_time
 session_cleanup
