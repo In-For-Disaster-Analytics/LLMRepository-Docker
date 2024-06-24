@@ -260,6 +260,22 @@ function handle_installation() {
 	fi
 }
 
+
+function set_up_cache_directories() {
+	# if the user has a cache directory and it is not a symlink, move it to scratch and create a symlink
+	if [ -d "${HOME}/.cache" ] && [ ! -L "${HOME}/.cache" ]; then
+		mv "${HOME}/.cache" "${SCRATCH}/"
+		ln -s "${SCRATCH}/.cache" "${HOME}/.cache"
+	fi
+
+	# if the cache directory does not exist, create it
+	if [ ! -d "${HOME}/.cache" ]; then
+		mkdir -p "${SCRATCH}/.cache"
+		ln -s "${SCRATCH}/.cache" "${HOME}/.cache"
+	fi
+
+}
+
 function start_ollama(){
 	if [ ! -f $SCRATCH/ollama ]; then
 		wget "https://github.com/ollama/ollama/releases/download/v0.1.20/ollama-linux-amd64"
@@ -288,6 +304,7 @@ export GIT_BRANCH=$4
 install_conda
 load_cuda
 export_repo_variables
+set_up_cache_directories
 init_directory
 load_tap_functions
 get_tap_certificate
