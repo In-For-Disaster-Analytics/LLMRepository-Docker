@@ -294,6 +294,11 @@ function get_elapsed_time() {
 	echo "Elapsed time: $minutes minutes"
 }
 
+function pre_start(){
+	conda activate ${COOKBOOK_CONDA_ENV}
+	python -m spacy download en_core_web_sm
+}
+
 #Parameters
 export DOWNLOAD_LATEST_VERSION=$1
 export UPDATE_CONDA_ENV=$2
@@ -311,6 +316,7 @@ get_tap_certificate
 get_tap_token
 create_jupyter_configuration
 handle_installation
+pre_start
 run_jupyter
 port_fowarding
 start_ollama
