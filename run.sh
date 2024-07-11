@@ -233,7 +233,11 @@ function conda_environment_exists() {
 }
 
 function create_conda_environment() {
-	conda env create -n ${COOKBOOK_CONDA_ENV} -f $COOKBOOK_WORKSPACE_DIR/.binder/environment.yml --yes
+	if [ ! -f $COOKBOOK_WORKSPACE_DIR/.binder/environment.yml ]; then
+		conda env create -n ${COOKBOOK_CONDA_ENV} -f $COOKBOOK_WORKSPACE_DIR/.binder/environment.yml --yes
+	else 
+		conda env create -n ${COOKBOOK_CONDA_ENV} -f $COOKBOOK_WORKSPACE_DIR/.binder/environment.yaml --yes
+	fi
 	conda activate ${COOKBOOK_CONDA_ENV}
 	conda install jupyterlab ipykernel --yes
 	pip install --no-cache-dir -r $COOKBOOK_WORKSPACE_DIR/.binder/requirements.txt
