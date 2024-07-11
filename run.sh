@@ -39,8 +39,8 @@ function load_cuda() {
 }
 
 function export_repo_variables() {
-	COOKBOOK_NAME="sites-and-stories-nlp"
-	COOKBOOK_CONDA_ENV="llm"
+	COOKBOOK_NAME="A2CPS ETL"
+	COOKBOOK_CONDA_ENV="A2CPS"
 	COOKBOOK_DIR=${WORK}/cookbooks
 	COOKBOOK_WORKSPACE_DIR=${COOKBOOK_DIR}/${COOKBOOK_NAME}
 	COOKBOOK_REPOSITORY_PARENT_DIR=${COOKBOOK_DIR}/.repository
@@ -319,7 +319,7 @@ handle_installation
 pre_start
 run_jupyter
 port_fowarding
-start_ollama
+# start_ollama
 send_url_to_webhook
 get_elapsed_time $start_time
 session_cleanup
