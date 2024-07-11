@@ -1,14 +1,13 @@
 {
-
   "id": "jupyter-lab-hpc-ls6-A2CPS",
-  "version": "0.0.82",
-  "description": "Run an interactive Jupyter Lab session on an HPC compute node to use A2CPs-Kerne. ",
+  "version": "0.0.84",
+  "description": "Run an interactive Jupyter Lab session on an HPC compute node to use A2CPs-Kernel. ",
   "owner": "${apiUserId}",
   "enabled": true,
   "runtime": "SINGULARITY",
   "runtimeVersion": null,
   "runtimeOptions": ["SINGULARITY_RUN"],
-  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:main",
+  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:A2CPS",
   "jobType": "BATCH",
   "maxJobs": -1,
   "maxJobsPerUser": -1,
@@ -77,18 +76,7 @@
           "inputMode": "REQUIRED",
           "arg": "main",
           "notes": {
-            "isHidden": false,
-            "enum_values": [
-              {
-                "jupyterenv": "Jupyter Lab environment"
-              },
-              {
-                "dev": "Development"
-              },
-              {
-                "main": "main"
-              }
-            ]
+            "isHidden": false
           }
         }
       ],

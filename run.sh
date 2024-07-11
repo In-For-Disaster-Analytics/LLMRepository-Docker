@@ -39,7 +39,7 @@ function load_cuda() {
 }
 
 function export_repo_variables() {
-	COOKBOOK_NAME="A2CPS ETL"
+	COOKBOOK_NAME="A2CPS"
 	COOKBOOK_CONDA_ENV="A2CPS"
 	COOKBOOK_DIR=${WORK}/cookbooks
 	COOKBOOK_WORKSPACE_DIR=${COOKBOOK_DIR}/${COOKBOOK_NAME}
