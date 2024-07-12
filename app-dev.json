@@ -1,13 +1,13 @@
 {
   "id": "jupyter-lab-hpc-ls6-A2CPS",
-  "version": "0.0.84",
+  "version": "0.0.85sha-7b60d7c",
   "description": "Run an interactive Jupyter Lab session on an HPC compute node to use A2CPs-Kernel. ",
   "owner": "${apiUserId}",
   "enabled": true,
   "runtime": "SINGULARITY",
   "runtimeVersion": null,
   "runtimeOptions": ["SINGULARITY_RUN"],
-  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:A2CPS",
+  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:sha-7b60d7c",
   "jobType": "BATCH",
   "maxJobs": -1,
   "maxJobsPerUser": -1,
@@ -75,6 +75,24 @@
           "description": "The branch of the git repository to clone.",
           "inputMode": "REQUIRED",
           "arg": "main",
+          "notes": {
+            "isHidden": false
+          }
+        },
+        {
+          "name": "Directory Name",
+          "description": "The branch of the git repository to clone.",
+          "inputMode": "REQUIRED",
+          "arg": "A2CPS_ETL",
+          "notes": {
+            "isHidden": false
+          }
+        },
+        {
+          "name": "Env Name",
+          "description": "The branch of the git repository to clone.",
+          "inputMode": "REQUIRED",
+          "arg": "A2CPS",
           "notes": {
             "isHidden": false
           }
