@@ -7,7 +7,7 @@ if [ "$1" != "true" ] && [ "$1" != "false" ]; then
 	echo "The first parameter must be a boolean value to recreate the environment"
 	exit 1
 fi
-if [ "$#" -ne 4 ]; then
+if [ "$#" -ne 6 ]; then
 	echo "Illegal number of parameters"
 	exit 1
 fi
@@ -39,8 +39,7 @@ function load_cuda() {
 }
 
 function export_repo_variables() {
-	COOKBOOK_NAME="A2CPS"
-	COOKBOOK_CONDA_ENV="A2CPS"
+
 	COOKBOOK_DIR=${WORK}/cookbooks
 	COOKBOOK_WORKSPACE_DIR=${COOKBOOK_DIR}/${COOKBOOK_NAME}
 	COOKBOOK_REPOSITORY_PARENT_DIR=${COOKBOOK_DIR}/.repository
@@ -308,6 +307,8 @@ export DOWNLOAD_LATEST_VERSION=$1
 export UPDATE_CONDA_ENV=$2
 export GIT_REPO_URL=$3
 export GIT_BRANCH=$4
+export COOKBOOK_NAME=$5
+export COOKBOOK_CONDA_ENV=$6
 
 #Execution
 install_conda
