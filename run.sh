@@ -232,7 +232,7 @@ function conda_environment_exists() {
 }
 
 function create_conda_environment() {
-	if [ ! -f $COOKBOOK_WORKSPACE_DIR/.binder/environment.yml ]; then
+	if [ -f $COOKBOOK_WORKSPACE_DIR/.binder/environment.yml ]; then
 		conda env create -n ${COOKBOOK_CONDA_ENV} -f $COOKBOOK_WORKSPACE_DIR/.binder/environment.yml --yes
 	else 
 		conda env create -n ${COOKBOOK_CONDA_ENV} -f $COOKBOOK_WORKSPACE_DIR/.binder/environment.yaml --yes
