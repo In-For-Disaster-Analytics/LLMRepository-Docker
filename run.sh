@@ -299,7 +299,7 @@ function get_elapsed_time() {
 
 function pre_start(){
 	conda activate ${COOKBOOK_CONDA_ENV}
-	python -m spacy download en_core_web_sm
+	
 }
 
 #Parameters
