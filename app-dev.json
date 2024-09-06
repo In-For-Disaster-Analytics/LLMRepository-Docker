@@ -1,13 +1,13 @@
 {
-  "id": "jupyter-lab-hpc-ls6-A2CPS",
-  "version": "0.0.85sha-4b82c31",
-  "description": "Run an interactive Jupyter Lab session on an HPC compute node to use A2CPs-Kernel. ",
+  "id": "jupyter-lab-hpc-ls6-TRI",
+  "version": "0.1.0sha-1f2522fr",
+  "description": "Run an interactive Jupyter Lab session on an HPC compute node to use SETx Toxic Release Inventory. ",
   "owner": "${apiUserId}",
   "enabled": true,
   "runtime": "SINGULARITY",
   "runtimeVersion": null,
   "runtimeOptions": ["SINGULARITY_RUN"],
-  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:sha-4b82c31",
+  "containerImage": "docker://ghcr.io/in-for-disaster-analytics/tap_llmrepository-docker:sha-1f2522f",
   "jobType": "BATCH",
   "maxJobs": -1,
   "maxJobsPerUser": -1,
@@ -65,7 +65,7 @@
           "name": "Git repository url",
           "description": "The URL of the git repository to clone.",
           "inputMode": "REQUIRED",
-          "arg": "https://github.com/mepearson/a2cps-etl.git",
+          "arg": "https://github.com/In-For-Disaster-Analytics/SETx-TRI-Analysis.git",
           "notes": {
             "isHidden": false
           }
@@ -81,18 +81,18 @@
         },
         {
           "name": "Directory Name",
-          "description": "The branch of the git repository to clone.",
+          "description": "Directory Name to create.",
           "inputMode": "REQUIRED",
-          "arg": "A2CPS_ETL",
+          "arg": "SETx-TRI",
           "notes": {
             "isHidden": false
           }
         },
         {
           "name": "Env Name",
-          "description": "The branch of the git repository to clone.",
+          "description": "Environment Name you want saved.",
           "inputMode": "REQUIRED",
-          "arg": "A2CPS",
+          "arg": "TRI",
           "notes": {
             "isHidden": false
           }
@@ -166,8 +166,8 @@
   },
   "tags": ["portalName: ALL"],
   "notes": {
-    "label": "A2CPS Environment (LoneStar 6)",
-    "helpUrl": "https://github.com/mepearson/a2cps-etl",
+    "label": "SETx-UIFL Toxic Release Inventory Environment (LoneStar 6)",
+    "helpUrl": "https://github.com/wmobley/SETx-TRI-Analysis",
     "html": "This app is a Jupyter Lab environment that allows you to use LLama to index data on the TACC Cloud Data Archive. It is a work in progress and is not yet fully functional.",
     "hideNodeCountAndCoresPerNode": true,
     "isInteractive": true,
