@@ -240,7 +240,7 @@ function create_conda_environment() {
 	conda activate ${COOKBOOK_CONDA_ENV}
 	conda install -c conda-forge voila --yes
 	conda install jupyterlab ipykernel --yes
-	jupyter server extension enable voila
+	jupyter server extension enable voila --Voila.tornado_settings="{'allow_origin': '*'}"
 
 	if [  -f $COOKBOOK_WORKSPACE_DIR/.binder/requirements.txt ]; then
 		pip install --no-cache-dir -r $COOKBOOK_WORKSPACE_DIR/.binder/requirements.txt
