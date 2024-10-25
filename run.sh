@@ -276,23 +276,19 @@ function set_up_cache_directories() {
 	fi
 	if [ ! -d "${COOKBOOK_WORKSPACE_DIR}/home" ]; then
 		echo "HOME LN created"
-		mkdir -p "${COOKBOOK_WORKSPACE_DIR}/home"
+		
 		ln -s  "${COOKBOOK_WORKSPACE_DIR}/home" $HOME
 	fi
 	if [ ! -d "${COOKBOOK_WORKSPACE_DIR}/work" ]; then
-		mkdir -p "${COOKBOOK_WORKSPACE_DIR}/work"
 	ln -s "${COOKBOOK_WORKSPACE_DIR}/work"  $WORK
 	fi
 	if [ ! -d "${COOKBOOK_WORKSPACE_DIR}/scratch" ]; then
-		mkdir -p "${COOKBOOK_WORKSPACE_DIR}/scratch"
 	ln -s  "${COOKBOOK_WORKSPACE_DIR}/scratch" $SCRATCH
 	fi
 		if [ ! -d "${COOKBOOK_WORKSPACE_DIR}/shared" ]; then
-		mkdir -p "${COOKBOOK_WORKSPACE_DIR}/shared"
 	ln -s 	 "${COOKBOOK_WORKSPACE_DIR}/shared" "/corral-repl/tacc/aci/PT2050/projects"
 	fi
 		if [ ! -d "${COOKBOOK_WORKSPACE_DIR}/collections" ]; then
-		mkdir -p "${COOKBOOK_WORKSPACE_DIR}/collections"
 	ln -s 	 "${COOKBOOK_WORKSPACE_DIR}/collections" "/corral-repl/tacc/aci/PT2050/community"
 	fi
 
