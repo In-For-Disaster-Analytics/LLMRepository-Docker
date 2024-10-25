@@ -304,6 +304,7 @@ function start_ollama(){
 		mv ollama-linux-amd64 $SCRATCH/ollama
 	fi
 	nohup $SCRATCH/ollama serve &
+	nohup !$SCRATCH/ollama pull mixtral &
 }
 
 
