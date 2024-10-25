@@ -233,6 +233,7 @@ function conda_environment_exists() {
 }
 
 function create_conda_environment() {
+
 	conda env create -n ${COOKBOOK_CONDA_ENV} -f $COOKBOOK_WORKSPACE_DIR/.binder/environment.yml --yes
 	conda activate ${COOKBOOK_CONDA_ENV}
 	conda install jupyterlab ipykernel --yes
@@ -272,6 +273,26 @@ function set_up_cache_directories() {
 	if [ ! -d "${HOME}/.cache" ]; then
 		mkdir -p "${SCRATCH}/.cache"
 		ln -s "${SCRATCH}/.cache" "${HOME}/.cache"
+	fi
+	if [ ! -d "${COOKBOOK_WORKSPACE_DIR}/home" ]; then
+	mkdir -p "${COOKBOOK_WORKSPACE_DIR}/home"
+	ln -s $HOME "${COOKBOOK_WORKSPACE_DIR}/home"
+	fi
+	if [ ! -d "${COOKBOOK_WORKSPACE_DIR}/work" ]; then
+		mkdir -p "${COOKBOOK_WORKSPACE_DIR}/work"
+	ln -s $WORK "${COOKBOOK_WORKSPACE_DIR}/work"
+	fi
+	if [ ! -d "${COOKBOOK_WORKSPACE_DIR}/scratch" ]; then
+		mkdir -p "${COOKBOOK_WORKSPACE_DIR}/scratch"
+	ln -s $SCRATCH "${COOKBOOK_WORKSPACE_DIR}/scratch"
+	fi
+		if [ ! -d "${COOKBOOK_WORKSPACE_DIR}/shared" ]; then
+		mkdir -p "${COOKBOOK_WORKSPACE_DIR}/shared"
+	ln -s 	"/corral-repl/tacc/aci/PT2050/projects" "${COOKBOOK_WORKSPACE_DIR}/shared"
+	fi
+		if [ ! -d "${COOKBOOK_WORKSPACE_DIR}/collections" ]; then
+		mkdir -p "${COOKBOOK_WORKSPACE_DIR}/collections"
+	ln -s 	"/corral-repl/tacc/aci/PT2050/community" "${COOKBOOK_WORKSPACE_DIR}/collections"
 	fi
 
 }
