@@ -288,9 +288,7 @@ function set_up_cache_directories() {
 		if [ ! -d "${COOKBOOK_WORKSPACE_DIR}/shared" ]; then
 	ln -s 	 "${COOKBOOK_WORKSPACE_DIR}/shared" "/corral-repl/tacc/aci/PT2050/projects"
 	fi
-		if [ ! -d "${COOKBOOK_WORKSPACE_DIR}/collections" ]; then
-	ln -s 	 "${COOKBOOK_WORKSPACE_DIR}/collections" "/corral-repl/tacc/aci/PT2050/community"
-	fi
+
 
 }
 
