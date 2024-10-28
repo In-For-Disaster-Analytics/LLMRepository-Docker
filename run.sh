@@ -160,7 +160,7 @@ function run_jupyter() {
 	NB_SERVERDIR=$HOME/.jupyter
 	JUPYTER_SERVER_APP="ServerApp"
 	JUPYTER_BIN="jupyter-lab"
-	JUPYTER_ARGS="--certfile=$(cat ${TAP_CERTFILE}) --config=${TAP_JUPYTER_CONFIG} --notebook-dir='${COOKBOOK_WORKSPACE_DIR}' --preferred-dir='${COOKBOOK_WORKSPACE_DIR}'"
+	JUPYTER_ARGS="--certfile=$(cat ${TAP_CERTFILE}) --config=${TAP_JUPYTER_CONFIG} --notebook-dir='${COOKBOOK_DIR}' --preferred-dir='${COOKBOOK_DIR}'"
 	JUPYTER_LOGFILE=${NB_SERVERDIR}/${NODE_HOSTNAME_PREFIX}.log
 	mkdir -p ${NB_SERVERDIR}
 	touch $JUPYTER_LOGFILE
@@ -274,19 +274,19 @@ function set_up_cache_directories() {
 		mkdir -p "${SCRATCH}/.cache"
 		ln -s "${SCRATCH}/.cache" "${HOME}/.cache"
 	fi
-	if [ ! -d "${COOKBOOK_WORKSPACE_DIR}/home" ] && [ ! -L "${COOKBOOK_WORKSPACE_DIR}/home" ]; then
-		echo "HOME LN created"	
-		ln -s  $HOME "${COOKBOOK_WORKSPACE_DIR}/home" 
-	fi
-	if [ ! -d "${COOKBOOK_WORKSPACE_DIR}/work" ] && [ ! -L "${COOKBOOK_WORKSPACE_DIR}/work" ]; then
-		ln -s " $WORK ${COOKBOOK_WORKSPACE_DIR}/work" 
-	fi
-	if [ ! -d "${COOKBOOK_WORKSPACE_DIR}/scratch" ] && [ ! -L "${COOKBOOK_WORKSPACE_DIR}/scratch" ]; then
-		ln -s   $SCRATCH "${COOKBOOK_WORKSPACE_DIR}/scratch"
-	fi
-	if [ ! -d "${COOKBOOK_WORKSPACE_DIR}/shared" ] && [ ! -L "${COOKBOOK_WORKSPACE_DIR}/shared" ]; then
-		ln -s 	 "/corral-repl/tacc/aci/PT2050/projects""${COOKBOOK_WORKSPACE_DIR}/shared" 
-	fi
+	# if [ ! -d "${COOKBOOK_WORKSPACE_DIR}/home" ] && [ ! -L "${COOKBOOK_WORKSPACE_DIR}/home" ]; then
+	# 	echo "HOME LN created"	
+	# 	ln -s  $HOME "${COOKBOOK_WORKSPACE_DIR}/home" 
+	# fi
+	# if [ ! -d "${COOKBOOK_WORKSPACE_DIR}/work" ] && [ ! -L "${COOKBOOK_WORKSPACE_DIR}/work" ]; then
+	# 	ln -s " $WORK ${COOKBOOK_WORKSPACE_DIR}/work" 
+	# fi
+	# if [ ! -d "${COOKBOOK_WORKSPACE_DIR}/scratch" ] && [ ! -L "${COOKBOOK_WORKSPACE_DIR}/scratch" ]; then
+	# 	ln -s   $SCRATCH "${COOKBOOK_WORKSPACE_DIR}/scratch"
+	# fi
+	# if [ ! -d "${COOKBOOK_WORKSPACE_DIR}/shared" ] && [ ! -L "${COOKBOOK_WORKSPACE_DIR}/shared" ]; then
+	# 	ln -s 	 "/corral-repl/tacc/aci/PT2050/projects" "${COOKBOOK_WORKSPACE_DIR}/shared" 
+	# fi
 
 
 }
