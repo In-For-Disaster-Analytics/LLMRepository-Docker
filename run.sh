@@ -293,9 +293,11 @@ function set_up_cache_directories() {
 
 function start_ollama(){
 	if [ ! -f $SCRATCH/ollama ]; then
-		wget "https://github.com/ollama/ollama/releases/download/v0.1.20/ollama-linux-amd64"
-		chmod 755 ollama-linux-amd64
-		mv ollama-linux-amd64 $SCRATCH/ollama
+		wget "https://github.com/ollama/ollama/releases/download/v0.4.1/ollama-linux-amd64.tgz"
+		tar -xvzf ollama-linux-amd64.tgz 
+		
+		chmod 755 ./bin/ollama
+		mv ./bin/ollama $SCRATCH/ollama
 	fi
 	nohup $SCRATCH/ollama serve &
 	nohup !$SCRATCH/ollama pull mixtral &
