@@ -293,7 +293,7 @@ function set_up_cache_directories() {
 
 function start_ollama(){
 	if [ ! -f $SCRATCH/ollama ]; then
-		wget "https://github.com/ollama/ollama/releases/download/v0.4.1/ollama-linux-amd64.tgz"
+		cp /corral-repl/tacc/aci/PT2050/projects/PTDATAX-248/ollama-linux-amd64.tgz .
 		tar -xvzf ollama-linux-amd64.tgz 
 		
 		chmod 755 ./bin/ollama
